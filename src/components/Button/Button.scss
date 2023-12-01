@@ -1,0 +1,21 @@
+@use "../../style/params.scss" as *;
+
+.button{
+    background-color: $primary-color;
+    border: 0px;
+    border-radius: toRem(8);
+    color: $headers-color;
+    padding: toRem(13) toRem(48);
+    font-size: medium;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 600;
+    width: toRem(210);
+}
+
+.button:hover{
+    background-color: $dark-primary;
+    transition-duration: 0.4s;
+}
+
