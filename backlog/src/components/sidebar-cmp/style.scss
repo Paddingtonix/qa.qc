@@ -1,0 +1,98 @@
+@use "../../style/params.scss" as *;
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 500px;
+  z-index: 10;
+  background-color: $background-color;
+  padding: toRem(36) toRem(12);
+  &__navigation {
+    position: absolute;
+    right: toRem(12);
+    top: toRem(12);
+    display: flex;
+    gap: 12px;
+    &__back {
+      cursor: pointer;
+      display: flex;
+      svg path {
+        transition: fill .2s;
+      }
+      &:hover {
+        svg path {
+          fill: $primary-color
+        }
+      }
+    }
+    &__close {
+      cursor: pointer;
+      display: flex;
+      svg path {
+        transition: fill .2s;
+      }
+      &:hover {
+        svg path {
+          fill: $primary-color
+        }
+      }
+    }
+  }
+  &__title {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: toRem(24);
+    &__container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    &__text {
+      color: $headers-color;
+      font-size: toRem(16);
+    }
+  }
+  &__tests {
+    &__success {
+      margin-bottom: toRem(24);
+    }
+    &__title {
+      color: $headers-color
+    }
+    &__text {
+      color: $headers-color;
+      font-size: toRem(20)
+    }
+    &__container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      svg {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        path {
+          transition: fill .2s;
+        }
+        &:hover {
+          path {
+            fill: $primary-color
+          }
+        }
+      }
+      &__test {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: toRem(24);
+      }
+    }
+  }
+}

@@ -1,70 +1,25 @@
-# Getting Started with Create React App
+#сборка 0.1.0
+начальная сборка, которая содержит в себе атомарную архитектуру
+состоит из: 
+    backlog - старая версия приложения
+    public - билд проекта
+    src - основная папка с компонентами
+        @types - содержит в себе файлы с основными типами данных, необходимо вести их так: есть определённая категория типов, например, input, которая может содержать в себе id, text, error, label, соответственно форма обратной связи, где используется этот input имеет свой тип данных, который наследуется у input
+        assets - папка, в которой содержится шрифты, данные которые не приходят с бэка (напр. картинки) и стили проекта
+        components - основные компоненты сайта base - то, что используется всегда (header, cookie, sidebar, modal), ui-components - юи компоненты сайта, т.е. переиспользуемые компоненты
+        pages - страницы сайта
+        untilities  - утилиты, которые используется на сайте
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Основные шрифты сайта - montserrat-bold для заголовком, inter-regular для всего остального
 
-## Available Scripts
+В сборке используется ресет браузерных стилей (normalize), в дефолтные стили необходимо писать основные стили сайта: стили контейнера, стили для тэгов. В параметры стилей необходимо писать все стили, все необходимые параметры: переменные цвета, функции. Именование переменных идёт по блокам и приоритетности: primary (основной), secondary (второстепенный) и через дефис название цвета или компонента. 
 
-In the project directory, you can run:
+Именование классов происходит с помощью методологии БЭМ https://ru.bem.info/methodology/quick-start/
+Основной класс - qa-qc 
 
-### `npm start`
+нейминг переменных происходит через camelCase
+именование функций так же через camelCase
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+все остальное в snake_case
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+табулатура равняется 4 пробелам

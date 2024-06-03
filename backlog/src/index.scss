@@ -1,0 +1,9 @@
+@use "./style/params.scss" as *;
+@use "./style/default.scss" as *;
+@use "./style/font.scss" as *;
+
+//components
+@use "./components/button-cmp/style.scss" as *;
+@use "./components/navbar-cmp/style.scss" as *;
+@use "./components/sidebar-cmp/style.scss" as *;
+@use "./components/checkbox-cmp/style.scss" as *;

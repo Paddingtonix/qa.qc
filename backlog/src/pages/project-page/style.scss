@@ -1,0 +1,388 @@
+@use "../../style/params.scss" as *;
+
+.project-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: $headers-color;
+
+  &__header {
+
+    display: flex;
+    justify-content: space-between;
+
+    width: toRem(1140);
+    gap: toRem(10);
+    padding: toRem(10) 0 0 0;
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: toRem(5);
+      padding: toRem(10) 0 0 0;
+
+      .tags__item {
+        border: 1px solid $text-color;
+        border-radius: toRem(16);
+        padding: toRem(10) toRem(20);
+        background-color: transparent;
+        cursor: pointer;
+        color: $text-color;
+        transition: .3s;
+
+        &:hover {
+          border-color: $primary-color;
+          color: $primary-color;
+        }
+
+        &_selected {
+          background-color: $primary-color;
+          color: $background-color;
+          border-color: transparent;
+          font-weight: bold;
+        }
+
+        &_selected:hover {
+          color: $background-color;
+        }
+      }
+    }
+  }
+
+  .project-content {
+    display: flex;
+    gap: 10px;
+
+    .categories-files-container {
+      background-color: $dark-background-color;
+      padding: toRem(20);
+      border-radius: toRem(8);
+      width: toRem(700);
+      overflow-y: auto;
+      max-height: 600px;
+      scrollbar-color: $background-color $dark-background-color;
+      scrollbar-width: thin;
+
+      &__empty {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $text-color;
+      }
+
+      .category-files {
+
+        > span {
+
+          .category-files__dropdown {
+            display: flex;
+            gap: toRem(10);
+
+            > div {
+              display: flex;
+              align-items: center;
+              gap: toRem(3);
+              color: $text-color;
+            }
+          }
+        }
+
+        &_open > span {
+          color: $primary-color;
+
+          .category-files__dropdown {
+            > svg {
+              rotate: 180deg;
+            }
+          }
+        }
+
+        &__list {
+          display: none;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          padding: toRem(10) 0;
+
+          &_open {
+            display: grid;
+          }
+
+          > span {
+            padding: toRem(10) toRem(5);
+            color: $text-color;
+          }
+        }
+
+        > span {
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          padding: toRem(5);
+          transition: .3s;
+        }
+      }
+    }
+
+    .upload-files-container {
+      width: toRem(350);
+      display: flex;
+      flex-direction: column;
+      gap: toRem(10);
+      height: max-content;
+
+      background-color: $dark-background-color;
+      padding: toRem(20);
+      border-radius: toRem(8);
+
+      .files-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+
+      h4 {
+        margin: 0 0 10px 0;
+        font-size: toRem(18);
+        letter-spacing: 1px;
+        font-weight: normal;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .dropdown-container {
+        width: 100%;
+        position: relative;
+
+        .dropdown {
+          background-color: #22848b;
+          border-radius: toRem(8);
+          display: flex;
+          position: relative;
+          cursor: pointer;
+        }
+
+        .category {
+          padding: toRem(15) toRem(20);
+          position: relative;
+        }
+
+        .chevron {
+          position: absolute;
+          top: 50%;
+          right: 25px;
+          transform: translateY(-50%);
+          cursor: pointer;
+        }
+
+        .arrow {
+          transform-origin: 50% 50%;
+          transform-box: fill-box;
+          opacity: 1;
+          transition: all .3s;
+          transform: rotate(180deg);
+        }
+
+        .arrow.up {
+          opacity: 1;
+          transform: rotate(0deg);
+        }
+
+        .dropdown-content-closed {
+          display: none;
+          flex-direction: column;
+        }
+
+        .dropdown-content-opened {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          background-color: $dark-background-color;
+          border-radius: 12px;
+          width: 100%;
+
+          span {
+            font-size: toRem(16);
+            border-radius: toRem(8);
+            cursor: pointer;
+            transition: .3s;
+            padding: toRem(15);
+            color: $headers-color;
+
+            &:hover {
+              background-color: $background-color;
+            }
+          }
+        }
+      }
+
+      .custom-dropzone {
+        border: 2px dotted $primary-color;
+        color: #8d8d8d;
+        padding: toRem(15);
+        text-align: center;
+        transition: .3s;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #3f3f3f;
+          color: $headers-color;
+        }
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+
+    .nodes-container {
+      width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        gap: toRem(5);
+        background-color: $dark-background-color;
+        padding: toRem(20);
+        border-radius: toRem(8);
+
+        &__domain {
+          color: $text-color;
+          text-transform: uppercase;
+          font-size: toRem(14);
+        }
+
+        &__name {
+          color: $headers-color;
+          font-size: toRem(20);
+          border-bottom: 1px solid $primary-color;
+          padding-bottom: toRem(5);
+          margin: 0 0 toRem(5) 0;
+          text-transform: uppercase;
+        }
+
+        &__attributes {
+          display: flex;
+          align-items: center;
+          gap: toRem(5);
+          text-transform: uppercase;
+          font-size: toRem(14);
+          color: $text-color;
+
+          path {
+            stroke: $text-color;
+          }
+        }
+      }
+    }
+
+    .test-container {
+      width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        gap: toRem(5);
+        background-color: $dark-background-color;
+        padding: toRem(20);
+        border-radius: toRem(8);
+
+        &__order {
+          color: $text-color;
+          text-transform: uppercase;
+          font-size: toRem(14);
+        }
+
+        &__name {
+          color: $headers-color;
+          font-size: toRem(20);
+          border-bottom: 1px solid $primary-color;
+          padding-bottom: toRem(5);
+          margin: 0 0 toRem(5) 0;
+          text-transform: uppercase;
+        }
+
+        &__nodes {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+
+          > div {
+            display: flex;
+            flex-direction: column;
+            gap: toRem(5);
+            text-transform: uppercase;
+
+            h5 {
+              margin: 0;
+              color: $headers-color;
+              font-size: toRem(14);
+            }
+
+            > div {
+              color: $text-color;
+              display: flex;
+              align-items: center;
+              gap: toRem(5);
+              font-size: toRem(14);
+            }
+
+            path {
+              stroke: $text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .file-card {
+    display: flex;
+    padding: toRem(10);
+
+    background-color: transparent;
+    color: #8d8d8d;
+    border-radius: toRem(10);
+    border: 1px solid #8d8d8d;
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0;
+      gap: toRem(5);
+
+      padding: toRem(5);
+
+      h5 {
+        color: $headers-color;
+        font-weight: normal;
+        margin: 0;
+      }
+
+      a {
+        color: $headers-color;
+        font-weight: normal;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+

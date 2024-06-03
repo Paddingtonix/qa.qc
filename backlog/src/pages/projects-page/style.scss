@@ -1,0 +1,95 @@
+@use "../../style/params.scss" as *;
+
+.projects-page {
+  display: flex;
+  justify-content: center;
+
+  > div {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+
+    h2 {
+      color: $headers-color;
+      font-size: toRem(24);
+      text-transform: uppercase;
+    }
+  }
+
+  &__projects-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    border-top: 1px solid $primary-color;
+    padding-top: 20px;
+  }
+
+  &__project-card {
+    background-color: $dark-background-color;
+    color: $headers-color;
+    font-size: toRem(20);
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
+    padding: toRem(20) toRem(20) toRem(40) toRem(20);
+    border-radius: toRem(8);
+    border: 1px solid transparent;
+
+    transition: .3s;
+
+    &:hover {
+      color: $primary-color;
+    }
+  }
+
+  &__create-button {
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    gap: toRem(5);
+    justify-content: center;
+    background-color: transparent;
+    border: 1px solid $text-color;
+    border-radius: toRem(8);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
+    color: $headers-color;
+
+    text-transform: uppercase;
+
+    transition: .3s;
+
+    &:hover {
+      color: $primary-color;
+      border-color: $primary-color;
+    }
+
+    &_normal {
+      cursor: pointer;
+    }
+
+    &_edit {
+      border-color: $primary-color;
+
+      input {
+        border-bottom: 1px solid $text-color;
+      }
+
+      svg {
+        cursor: pointer;
+
+        path {
+          fill: #8d8d8d;
+          transition: .3s;
+        }
+
+        &:hover {
+          path {
+            fill: $primary-color;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+$primary-color: #3FBAC2;
+$text-color: #B3B3B3;
+$headers-color: #FFFFFF;
+$background-color: #272727;
+$dark-background-color: #1B1B1B;
+$error-color: #d32e2e;
+$not-color: #092B2E;
+$dark-primary:#1B686D;
+
+$notification-warning-color: #f3c221;
+$notification-success-color: #4caf50;
+$notification-error-color: #f44336;
+
+
+@function toRem($value) {
+    $remValue: ($value / 16) + rem;
+    @return $remValue;
+}

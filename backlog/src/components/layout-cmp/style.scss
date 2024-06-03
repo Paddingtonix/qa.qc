@@ -1,0 +1,42 @@
+@use "../../style/params.scss" as *;
+
+.layout-cmp {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: $background-color;
+
+  .layout-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: $background-color;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3);
+
+    &__content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    &__logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+
+      h5 {
+        color: $headers-color;
+        margin: 0;
+        font-size: toRem(24);
+        letter-spacing: toRem(1);
+      }
+
+      span {
+        color: $primary-color;
+        font-size: toRem(24);
+      }
+    }
+  }
+}

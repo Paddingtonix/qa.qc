@@ -1,0 +1,67 @@
+@use "../../style/params.scss" as *;
+    
+.selector {
+    position: relative;
+    border: toRem(1) solid $text-color;
+    border-radius: toRem(8);
+    padding: toRem(4) toRem(8);
+    &-list {
+        position: absolute;
+        background-color: $dark-background-color;
+        padding: toRem(15);
+        color: $text-color;
+        display: flex;
+        flex-direction: column;
+        gap: toRem(10);
+        border-radius: toRem(8);
+        border: toRem(1) solid $text-color;
+        top: toRem(40);
+        left: 0;
+        right: 0;
+        min-width: toRem(110);
+        span {
+            cursor: pointer;
+            transition: color .2s;
+            &:hover {
+                color: $headers-color
+            }
+        }
+    }
+    &-clear {
+        // display: flex;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        right: toRem(8);
+        z-index: 11;
+        cursor: pointer;
+        &:hover {
+            .selector-clear__icon {
+                > div {
+                    background-color: $primary-color;
+                } 
+            }
+        }
+        &__icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &__line {
+                width: 15px;
+                height: 1px;
+                background-color: $headers-color;
+                transition: background .2s;
+                position: absolute;
+                top: 50%;
+                &:first-child {
+                    transform: rotate(-135deg);
+                }
+                &:last-child {
+                    transform: rotate(135deg);
+                }  
+            }
+        }
+    }
+}
