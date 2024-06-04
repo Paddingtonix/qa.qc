@@ -9,19 +9,18 @@
     width: 100%
     display: flex
     flex-direction: column
-    padding-top: 50px
+    padding-top: 80px
 
     h2
       color: $headers-color
-      font-size: toRem(24)
+      font-size: toRem(28)
       text-transform: uppercase
 
   &__projects-list
-    display: grid
-    grid-template-columns: repeat(3, 1fr)
-    gap: 20px
-    border-top: 1px solid $primary-color
-    padding-top: 20px
+    display: flex
+    flex-direction: column
+    gap: 10px
+    margin-top: toRem(20)
 
   &__project-card
     background-color: $dark-background-color
@@ -30,8 +29,7 @@
     text-decoration: none
     text-transform: uppercase
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
-    padding: toRem(20) toRem(20) toRem(40) toRem(20)
-    border-radius: toRem(8)
+    padding: toRem(25)
     border: 1px solid transparent
     transition: .3s
 

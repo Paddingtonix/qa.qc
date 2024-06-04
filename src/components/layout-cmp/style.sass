@@ -1,16 +1,17 @@
 @use "./../../assets/style/params.sass" as *
 
 .layout-cmp
-  width: 100vw
   min-height: 100vh
   background-color: $background-color
 
   .layout-header
+    width: 100%
     display: flex
     justify-content: center
     align-items: center
+    position: fixed
     height: 50px
-    background-color: $background-color
+    background-color: rgba(40, 40, 40, 0.91)
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3)
 
     &__content
@@ -36,3 +37,6 @@
       span
         color: $primary-color
         font-size: toRem(24)
+
+  .layout-content
+    padding: toRem(10) toRem(10) toRem(50) toRem(10)

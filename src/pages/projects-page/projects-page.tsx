@@ -21,7 +21,7 @@ const ProjectsPage = () => {
         <LayoutCmp>
             <div className={"projects-page"}>
                 <div>
-                    <h2>Мои проекты</h2>
+                    <h2>Проекты</h2>
                     <div className={"projects-page__projects-list"}>
                         { isLoading ? <LoaderCmp/> :
                             <>

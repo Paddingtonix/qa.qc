@@ -19,7 +19,9 @@ const LayoutCmp = ({children}: Props) => {
                     <AccountCmp/>
                 </div>
             </div>
-            {children}
+            <div className={"layout-content"}>
+                {children}
+            </div>
         </div>
     )
 }
