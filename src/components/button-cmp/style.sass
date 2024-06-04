@@ -1,0 +1,17 @@
+@use "./../../assets/style/params.sass" as *
+
+.button
+    background-color: $primary-color
+    border: 0
+    border-radius: toRem(8)
+    color: $headers-color
+    padding: toRem(13) toRem(48)
+    font-size: medium
+    text-align: center
+    display: inline-block
+    cursor: pointer
+    font-weight: 600
+    transition-duration: .3s
+
+    &:hover
+        background-color: $dark-primary
