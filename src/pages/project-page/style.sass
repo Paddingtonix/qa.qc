@@ -11,10 +11,22 @@
 
   &__header
     display: flex
+    flex-direction: column
     justify-content: space-between
     width: toRem(1140)
-    gap: toRem(10)
+    gap: toRem(20)
     padding: toRem(10) 0 0 0
+
+    h2
+      color: $headers-color
+      font-size: toRem(28)
+      margin: 0
+
+    h5
+      color: $text-color
+      font-size: toRem(16)
+      font-weight: normal
+      margin: 0
 
     .tags
       display: flex
@@ -51,7 +63,6 @@
     .categories-files-container
       background-color: $dark-background-color
       padding: toRem(20)
-      border-radius: toRem(8)
       width: toRem(700)
       overflow-y: auto
       max-height: 600px
@@ -117,7 +128,6 @@
 
       background-color: $dark-background-color
       padding: toRem(20)
-      border-radius: toRem(8)
 
       .files-container
         display: flex
@@ -192,6 +202,7 @@
 
       .custom-dropzone
         border: 2px dotted $primary-color
+        background-color: rgba(14, 156, 162, 0.07)
         color: #8d8d8d
         padding: toRem(15)
         text-align: center
@@ -199,7 +210,7 @@
         cursor: pointer
 
         &:hover
-          background-color: #3f3f3f
+          background-color: rgba(14, 156, 162, 0.18)
           color: $headers-color
 
         p

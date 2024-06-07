@@ -9,12 +9,16 @@
     width: 100%
     display: flex
     flex-direction: column
-    padding-top: 80px
 
     h2
       color: $headers-color
       font-size: toRem(28)
       text-transform: uppercase
+
+    div:nth-child(2)
+      display: flex
+      justify-content: end
+      width: 100%
 
   &__projects-list
     display: flex
@@ -23,29 +27,49 @@
     margin-top: toRem(20)
 
   &__project-card
+    display: flex
+    justify-content: space-between
+    align-items: center
     background-color: $dark-background-color
     color: $headers-color
-    font-size: toRem(20)
     text-decoration: none
     text-transform: uppercase
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
     padding: toRem(25)
-    border: 1px solid transparent
     transition: .3s
 
     &:hover
       color: $primary-color
 
-  &__create-button
-    min-height: 74px
+    > span
+      font-size: toRem(20)
+
+  &__create-button-container
     display: flex
     align-items: center
     gap: toRem(5)
+
+    svg
+      cursor: pointer
+
+      path
+        fill: #8d8d8d
+        transition: .3s
+
+      &:hover
+        path
+          fill: $primary-color
+
+  &__create-button
+    width: max-content
+    display: flex
+    align-items: center
+    gap: toRem(5)
+    padding: toRem(10) toRem(32)
     justify-content: center
     background-color: transparent
     border: 1px solid $text-color
-    border-radius: toRem(8)
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
+    border-radius: toRem(24)
     color: $headers-color
     text-transform: uppercase
     transition: .3s
@@ -62,14 +86,3 @@
 
       input
         border-bottom: 1px solid $text-color
-
-      svg
-        cursor: pointer
-
-        path
-          fill: #8d8d8d
-          transition: .3s
-
-        &:hover
-          path
-            fill: $primary-color

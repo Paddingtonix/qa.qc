@@ -96,6 +96,8 @@ export const ProjectPage = () => {
         <LayoutCmp>
             <div className="project-page">
                 <div className={"project-page__header"}>
+                    <h2>Project name</h2>
+                    <h5>Загрузите данные для тестирования</h5>
                     <div className={"tags"}>
                         {
                             Tags?.map(tag =>
@@ -121,7 +123,7 @@ export const ProjectPage = () => {
                                 <CategoryFiles name={"СКВ.ИССЛЕДОВАНИЕ"} files={[]}/>
                             </div>
                             <div className={"upload-files-container"}>
-                                <h4>Загрузить новые данные</h4>
+                                <h4>Загрузить данные</h4>
                                 <div className='dropdown-container'>
                                     <div className='dropdown' onClick={() => setOpenDropdown(!openDropdown)}>
                                         <div className='category'>
@@ -148,7 +150,7 @@ export const ProjectPage = () => {
                                 </div>
                                 <div {...getRootProps({className: 'dropzone'})} className='custom-dropzone'>
                                     <input {...getInputProps()} />
-                                    <span>Перетащите файлы сюда или <br/> кликните, чтобы выбрать файл</span>
+                                    <span>Выберите или<br/>перетащите файл в поле</span>
                                 </div>
                                 <div className='files-container'>
                                     {
@@ -160,8 +162,8 @@ export const ProjectPage = () => {
                                 {
                                     loadedFiles.length ?
                                         <>
-                                            <ButtonCmp onClick={onUpload}>Загрузить данные</ButtonCmp>
-                                            <ButtonCmp onClick={() => setLoadedFiles([])}>Отмена</ButtonCmp>
+                                            <ButtonCmp onClick={onUpload}>Загрузить</ButtonCmp>
+                                            <ButtonCmp onClick={() => setLoadedFiles([])} type={"secondary"}>Отмена</ButtonCmp>
                                         </>
                                         : null
                                 }
