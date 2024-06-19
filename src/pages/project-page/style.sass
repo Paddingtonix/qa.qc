@@ -20,19 +20,18 @@
     h2
       color: $headers-color
       font-size: toRem(28)
-      margin: 0
 
     h5
       color: $text-color
       font-size: toRem(16)
       font-weight: normal
-      margin: 0
 
     .tabs
       display: flex
       flex-wrap: wrap
       gap: toRem(5)
       padding: toRem(10) 0 0 0
+      border-bottom: 1px solid #3a3a3a
 
       .tabs__item
         border-bottom: 1px solid transparent
@@ -44,7 +43,7 @@
 
         &:hover
           border-color: $primary-color
-          background-color: rgba(14, 156, 162, 0.07)
+          background-color: $primary-ghost-color
 
         &_selected
           border-color: $primary-color
@@ -142,7 +141,7 @@
 
     .custom-dropzone
       border: 2px dotted $primary-color
-      background-color: rgba(14, 156, 162, 0.07)
+      background-color: $primary-ghost-color
       color: #8d8d8d
       padding: toRem(15)
       text-align: center
@@ -184,3 +183,79 @@
 
       a:hover
         text-decoration: underline
+
+
+.files-tab
+  display: flex
+  gap: toRem(10)
+
+  &__tree
+    background-color: $dark-background-color
+    padding: toRem(20) toRem(40)
+    width: toRem(350)
+
+  > div:nth-child(2)
+    display: flex
+    flex-direction: column
+    gap: toRem(10)
+    flex: 1 1 0
+
+    .files-tab__info
+      display: flex
+      flex-direction: column
+      gap: toRem(10)
+      background-color: $dark-background-color
+      padding: toRem(20)
+
+      h4
+        font-weight: normal
+        font-size: toRem(24)
+        color: $headers-color
+
+      p
+        font-size: toRem(18)
+        color: $text-color
+
+      h5
+        text-align: center
+        font-weight: normal
+        font-size: toRem(18)
+        color: $text-color
+        margin: toRem(40) 0
+
+    .files-tab__table
+      background-color: $dark-background-color
+      padding: toRem(20)
+
+.data-tab
+  display: flex
+  gap: toRem(10)
+
+  &__tree
+    background-color: $dark-background-color
+    padding: toRem(20) toRem(40)
+    width: toRem(350)
+
+  &__info
+    display: flex
+    flex: 1 1 0
+    flex-direction: column
+    gap: toRem(10)
+    background-color: $dark-background-color
+    padding: toRem(20)
+
+    h4
+      font-weight: normal
+      font-size: toRem(24)
+      color: $headers-color
+
+    p
+      font-size: toRem(18)
+      color: $text-color
+
+    h5
+      text-align: center
+      font-weight: normal
+      font-size: toRem(18)
+      color: $text-color
+      margin: toRem(40) 0

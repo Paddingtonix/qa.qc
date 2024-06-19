@@ -6,6 +6,8 @@ import {useParams} from "react-router-dom";
 import LayoutCmp from "../../components/layout-cmp/layout-cmp";
 import LoaderCmp from "../../components/loader-cmp/loader-cmp";
 import LoadProjectTab from "./load-tab";
+import FilesTab from "./files-tab";
+import DataTab from "./data-tab";
 
 enum ProjectTab {
     Load = "Load",
@@ -33,8 +35,8 @@ export const ProjectPage = () => {
 
     const ProjectTabContent: Record<ProjectTab, React.ReactNode> = {
         [ProjectTab.Load]: <LoadProjectTab files={projectFiles}/>,
-        [ProjectTab.Files]: <div/>,
-        [ProjectTab.Data]: <div/>,
+        [ProjectTab.Files]: <FilesTab/>,
+        [ProjectTab.Data]: <DataTab/>,
     }
 
     return (
