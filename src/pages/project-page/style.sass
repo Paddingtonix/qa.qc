@@ -28,13 +28,13 @@
       font-weight: normal
       margin: 0
 
-    .tags
+    .tabs
       display: flex
       flex-wrap: wrap
       gap: toRem(5)
       padding: toRem(10) 0 0 0
 
-      .tags__item
+      .tabs__item
         border-bottom: 1px solid transparent
         padding: toRem(15) toRem(20)
         background-color: transparent
@@ -49,110 +49,112 @@
         &_selected
           border-color: $primary-color
 
-  .project-content
-    display: flex
-    gap: 10px
+  &__content
+    width: toRem(1140)
 
-    .categories-files-container
-      background-color: $dark-background-color
-      padding: toRem(20)
-      width: toRem(700)
-      overflow-y: auto
-      max-height: 600px
-      scrollbar-color: $background-color $dark-background-color
-      scrollbar-width: thin
 
-      &__empty
-        height: 100%
-        display: flex
-        justify-content: center
-        align-items: center
-        color: $text-color
+.load-tab
+  display: flex
+  gap: 10px
 
-      .category-files
+  &__categories-container
+    background-color: $dark-background-color
+    padding: toRem(20)
+    flex: 1 1 0
+    overflow-y: auto
+    max-height: 600px
+    scrollbar-color: $background-color $dark-background-color
+    scrollbar-width: thin
+
+    &__empty
+      height: 100%
+      display: flex
+      justify-content: center
+      align-items: center
+      color: $text-color
+
+    .category-files
+
+      &_open > span
+        color: $primary-color
+
+        .category-files__dropdown
+          > svg
+            rotate: 180deg
+
+      &__list
+        display: none
+        grid-template-columns: repeat(2, 1fr)
+        gap: 10px
+        padding: toRem(10) 0
+
+        &_open
+          display: grid
 
         > span
-          text-transform: uppercase
+          padding: toRem(10) toRem(5)
+          color: $text-color
 
-          .category-files__dropdown
+      > span
+        text-transform: uppercase
+        cursor: pointer
+        display: flex
+        justify-content: space-between
+        align-items: center
+        width: 100%
+        padding: toRem(5)
+        transition: .3s
+
+        .category-files__dropdown
+          display: flex
+          gap: toRem(10)
+
+          > div
             display: flex
-            gap: toRem(10)
-
-            > div
-              display: flex
-              align-items: center
-              gap: toRem(3)
-              color: $text-color
-
-        &_open > span
-          color: $primary-color
-
-          .category-files__dropdown
-            > svg
-              rotate: 180deg
-
-        &__list
-          display: none
-          grid-template-columns: repeat(2, 1fr)
-          gap: 10px
-          padding: toRem(10) 0
-
-          &_open
-            display: grid
-
-          > span
-            padding: toRem(10) toRem(5)
+            align-items: center
+            gap: toRem(3)
             color: $text-color
 
-        > span
-          cursor: pointer
-          display: flex
-          justify-content: space-between
-          align-items: center
-          width: 100%
-          padding: toRem(5)
-          transition: .3s
+  &__upload-container
+    width: toRem(350)
+    display: flex
+    flex-direction: column
+    gap: toRem(10)
+    height: max-content
 
-    .upload-files-container
-      width: toRem(350)
+    background-color: $dark-background-color
+    padding: toRem(20)
+
+    .files-container
       display: flex
       flex-direction: column
-      gap: toRem(10)
-      height: max-content
+      gap: 10px
+      width: 100%
 
-      background-color: $dark-background-color
-      padding: toRem(20)
+    h4
+      margin: 0 0 10px 0
+      font-size: toRem(18)
+      letter-spacing: 1px
+      font-weight: normal
 
-      .files-container
-        display: flex
-        flex-direction: column
-        gap: 10px
-        width: 100%
+    button
+      width: 100%
 
-      h4
-        margin: 0 0 10px 0
-        font-size: toRem(18)
-        letter-spacing: 1px
-        font-weight: normal
+    .custom-dropzone
+      border: 2px dotted $primary-color
+      background-color: rgba(14, 156, 162, 0.07)
+      color: #8d8d8d
+      padding: toRem(15)
+      text-align: center
+      transition: .3s
+      cursor: pointer
 
-      button
-        width: 100%
+      &:hover
+        background-color: rgba(14, 156, 162, 0.18)
+        color: $headers-color
 
-      .custom-dropzone
-        border: 2px dotted $primary-color
-        background-color: rgba(14, 156, 162, 0.07)
-        color: #8d8d8d
-        padding: toRem(15)
-        text-align: center
-        transition: .3s
-        cursor: pointer
-
-        &:hover
-          background-color: rgba(14, 156, 162, 0.18)
-          color: $headers-color
-
-        p
-          margin: 0
+      p
+        margin: 0
 
   .file-card
     display: flex
