@@ -1,5 +1,6 @@
-import Tree, {TreeItem} from "../../components/tree/Tree";
+import Tree from "../../components/tree/Tree";
 import {useState} from "react";
+import {MockDataData} from "./MOCK_DATA";
 
 const DataTab = () => {
 
@@ -27,61 +28,6 @@ const DataTab = () => {
     )
 };
 
-const MockDataData: TreeItem[] = [
-    {
-        value: "Узлы данных",
-        label: "Узлы данных",
-        children: [
-            {
-                value: "Домен “Керн”",
-                label: "Домен “Керн”",
-                children: [
-                    {
-                        value: "Тип узла (Кп_абс)",
-                        label: "Тип узла (Кп_абс)",
-                        children: [
-                            {value: "Кп_абс/CORE (well: 888)", label: "Кп_абс/CORE (well: x1)"}
-                        ]
-                    }
-                ]
-            },
-            {
-                value: "Домен “WELLS”",
-                label: "Домен “WELLS”",
-                children: [
-                    {
-                        value: "Тип узла (OPR)",
-                        label: "Тип узла (OPR)",
-                        children: [
-                            {value: "Кп_абс/CORE (well: x77)", label: "Кп_абс/CORE (well: x1)"},
-                            {value: "Кп_абс/CORE (well: x2)", label: "Кп_абс/CORE (well: x1)"},
-                            {value: "Кп_абс/CORE (well: x3)", label: "Кп_абс/CORE (well: x1)"},
-                            {value: "Кп_абс/CORE (well: x5)", label: "Кп_абс/CORE (well: x1)"}
-                        ]
-                    }
-                ]
-            },
-        ]
-    },
-    {
-        value: "Вспомогательные данные",
-        label: "Вспомогательные данные",
-        children: [
-            {
-                value: "Домен “Керн”",
-                label: "Домен “Керн”",
-                children: [
-                    {
-                        value: "Тип узла (Кп_абс)",
-                        label: "Тип узла (Кп_абс)",
-                        children: [
-                            {value: "Кп_абс/CORE (well: x1)", label: "Кп_абс/CORE (well: x1)"}
-                        ]
-                    }
-                ]
-            },
-        ]
-    }
-]
+
 
 export default DataTab;
