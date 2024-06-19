@@ -55,15 +55,12 @@
 .load-tab
   display: flex
   gap: 10px
+  position: relative
 
   &__categories-container
     background-color: $dark-background-color
     padding: toRem(20)
     flex: 1 1 0
-    overflow-y: auto
-    max-height: 600px
-    scrollbar-color: $background-color $dark-background-color
-    scrollbar-width: thin
 
     &__empty
       height: 100%
@@ -115,6 +112,8 @@
             color: $text-color
 
   &__upload-container
+    position: sticky
+    top: toRem(100)
     width: toRem(350)
     display: flex
     flex-direction: column
