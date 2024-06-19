@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useState} from "react";
-import {setAuthHeaderToInstance} from "./api";
+import {setAuthHeaderToInstance} from "../api/api";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {
     getAccessToken, getRefreshToken, getSessionToken,
@@ -8,8 +8,8 @@ import {
     setAccessToken,
     setRefreshToken,
     setSessionToken
-} from "./local-storage";
-import {queryKeys, service} from "./service";
+} from "../helpers/local-storage";
+import {queryKeys, service} from "../api/service";
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 

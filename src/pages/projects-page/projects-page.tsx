@@ -1,6 +1,6 @@
 import "./style.sass"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {CreateProjectDto, queryKeys, service} from "../../utils/service";
+import {CreateProjectDto, queryKeys, service} from "../../utils/api/service";
 import LayoutCmp from "../../components/layout-cmp/layout-cmp";
 import {generatePath, Link} from "react-router-dom";
 import {Links} from "../../App";
@@ -29,12 +29,16 @@ const ProjectsPage = () => {
                         {isLoading ? <LoaderCmp/> :
                             projects?.map(project =>
                                 <Link to={generatePath(Links.Project, {id: project.id})}
-                                      className={"projects-page__project-card"} key={project.id}>
+                                      className={"project-card"} key={project.id}>
                                     <span>{project.name}</span>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41L17.59 5Z"/>
-                                    </svg>
+                                    <TooltipCmp text={"Удалить"} direction={"top"}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                             className={"project-card__delete-button"}
+                                        >
+                                            <path
+                                                d="M17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41L17.59 5Z"/>
+                                        </svg>
+                                    </TooltipCmp>
                                 </Link>
                             )
                         }

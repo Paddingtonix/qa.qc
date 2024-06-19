@@ -3,23 +3,19 @@ import {FileWithPath, useDropzone} from 'react-dropzone'
 import "./style.sass"
 import {ButtonCmp} from "../../components/button-cmp/button-cmp"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {ProjectFileDto, queryKeys, service, UploadTestFileDto} from "../../utils/service";
+import {ProjectFileDto, queryKeys, service, UploadTestFileDto} from "../../utils/api/service";
 import {useNotification} from "../../components/base/notification/notification-provider";
 import {Link, useParams} from "react-router-dom";
 import LayoutCmp from "../../components/layout-cmp/layout-cmp";
-import TooltipCmp from "../../components/tooltip-cmp/tooltip-cmp";
 import LoaderCmp from "../../components/loader-cmp/loader-cmp";
+import DropdownCmp from "../../components/dropdown-cmp/dropdown-cmp";
 
-type Category = {
-    name: string
-}
 
-const CATEGORIES: Category[] = [
-    {name: "CORE"},
-    {name: "ПЕТРОФИЗИКА"},
-    {name: "PVT"},
-    {name: "СЕЙСМИКА"},
-    {name: "СКВ.ИССЛЕДОВАНИЕ"}
+const CATEGORIES = [
+    { key: "Core", title: "Core" },
+    { key: "Данные ГИС", title: "Данные ГИС" },
+    { key: "РИГИС", title: "РИГИС" },
+    { key: "All", title: "All" },
 ]
 
 const Tags = [
@@ -28,12 +24,12 @@ const Tags = [
         name: "Загрузка данных"
     },
     {
-        key: "test",
-        name: "Тесты"
+        key: "files",
+        name: "Файлы"
     },
     {
-        key: "node",
-        name: "Узлы"
+        key: "data",
+        name: "Загруженные данные"
     }
 ]
 
@@ -42,9 +38,9 @@ export const ProjectPage = () => {
     const queryClient = useQueryClient();
     const {id: projectId} = useParams()
     const [selectedTag, setSelectedTag] = useState("load");
-    const [selectedCategory, setSelectedCategory] = useState<string>('CORE')
+    const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined)
     const [loadedFiles, setLoadedFiles] = useState<FileWithPath[]>([])
-    const [openDropdown, setOpenDropdown] = useState(false)
+
 
     const {toastSuccess, toastWarning} = useNotification();
 
@@ -81,7 +77,6 @@ export const ProjectPage = () => {
 
     const selectCategory = (name: string) => {
         setSelectedCategory(name)
-        setOpenDropdown(false)
     }
 
     const onUpload = () => {
@@ -116,40 +111,21 @@ export const ProjectPage = () => {
                         selectedTag === "load" &&
                         <>
                             <div className={"categories-files-container"}>
-                                <CategoryFiles name={"CORE"} files={projectFiles}/>
-                                <CategoryFiles name={"ПЕТРОФИЗИКА"} files={[]}/>
-                                <CategoryFiles name={"PVT"} files={[]}/>
-                                <CategoryFiles name={"СЕЙСМИКА"} files={[]}/>
-                                <CategoryFiles name={"СКВ.ИССЛЕДОВАНИЕ"} files={[]}/>
+                                <CategoryFiles name={"Core"} files={projectFiles}/>
+                                <CategoryFiles name={"Данные ГИС"} files={[]}/>
+                                <CategoryFiles name={"РИГИС"} files={[]}/>
+                                <CategoryFiles name={"All"} files={[]}/>
                             </div>
                             <div className={"upload-files-container"}>
                                 <h4>Загрузить данные</h4>
-                                <div className='dropdown-container'>
-                                    <div className='dropdown' onClick={() => setOpenDropdown(!openDropdown)}>
-                                        <div className='category'>
-                                            {selectedCategory}
-                                        </div>
-                                        <div className='chevron'>
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 className={!openDropdown ? 'arrow up' : 'arrow'}>
-                                                <path
-                                                    d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"
-                                                    fill="#ffffff"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div
-                                        className={!openDropdown ? "dropdown-content-closed" : "dropdown-content-opened"}>
-                                        {CATEGORIES.map((item) =>
-                                                <span key={item.name} onClick={() => selectCategory(item.name)}>
-                                    {item.name}
-                                </span>
-                                        )}
-                                    </div>
-                                </div>
+                                <DropdownCmp
+                                    items={CATEGORIES}
+                                    defaultValue={selectedCategory}
+                                    placeholder={"Выберете категорию"}
+                                    onSelect={(key: string) => selectCategory(key)}
+                                />
                                 <div {...getRootProps({className: 'dropzone'})} className='custom-dropzone'>
-                                    <input {...getInputProps()} />
+                                    <input {...getInputProps()}/>
                                     <span>Выберите или<br/>перетащите файл в поле</span>
                                 </div>
                                 <div className='files-container'>
@@ -170,104 +146,9 @@ export const ProjectPage = () => {
                             </div>
                         </>
                     }
-                    { selectedTag === "test" && <TestsSection/> }
-                    { selectedTag === "node" && <NodesSection/> }
                 </div>
             </div>
         </LayoutCmp>
-    )
-}
-
-const TestsSection = () => {
-
-    const {id: projectId} = useParams()
-
-    const {data: projectTests, isLoading} = useQuery({
-        queryKey: queryKeys.projectTests(projectId),
-        queryFn: () => service.getProjectTests(projectId || ""),
-        select: ({data}) => data.result,
-        enabled: !!projectId
-    })
-
-    return (
-        <div className={"test-container"}>
-            {
-                isLoading ? <LoaderCmp/> :
-                projectTests?.tests.length ?
-                    projectTests?.tests.map(test =>
-                        <div className={"test-container__item"} key={test.test.test_id}>
-                            <span className={"test-container__item__order"}>Порядок: {test.test_order}</span>
-                            <h5 className={"test-container__item__name"}>{test.test.test_name}</h5>
-                            <div className={"test-container__item__nodes"}>
-                                {
-                                    test.nodes.map(node =>
-                                        <div key={node.id}>
-                                            <h5>{node.name}</h5>
-                                            <div>
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M8 6.00067L21 6.00139M8 12.0007L21 12.0015M8 18.0007L21 18.0015M3.5 6H3.51M3.5 12H3.51M3.5 18H3.51M4 6C4 6.27614 3.77614 6.5 3.5 6.5C3.22386 6.5 3 6.27614 3 6C3 5.72386 3.22386 5.5 3.5 5.5C3.77614 5.5 4 5.72386 4 6ZM4 12C4 12.2761 3.77614 12.5 3.5 12.5C3.22386 12.5 3 12.2761 3 12C3 11.7239 3.22386 11.5 3.5 11.5C3.77614 11.5 4 11.7239 4 12ZM4 18C4 18.2761 3.77614 18.5 3.5 18.5C3.22386 18.5 3 18.2761 3 18C3 17.7239 3.22386 17.5 3.5 17.5C3.77614 17.5 4 17.7239 4 18Z"
-                                                        stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"
-                                                        strokeLinejoin="round"/>
-                                                </svg>
-                                                { Object.keys(node.values_attributes).join(",") }
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        </div>
-                    ) : <span>Доступных тестов нет</span>
-            }
-        </div>
-    )
-}
-
-const NodesSection = () => {
-
-    const {id: projectId} = useParams()
-
-    const {data: projectNodes, isLoading} = useQuery({
-        queryKey: queryKeys.projectNodes(projectId),
-        queryFn: () => service.getProjectNodes(projectId || ""),
-        select: ({data}) => data.nodes,
-        enabled: !!projectId
-    })
-
-    return (
-        <div className={"nodes-container"}>
-            {
-                isLoading ? <LoaderCmp/> :
-                projectNodes?.length ?
-                    projectNodes?.map(node =>
-                        <div className={"nodes-container__item"} key={node.id}>
-                            <span className={"nodes-container__item__domain"}>{node.domain}</span>
-                            <h5 className={"nodes-container__item__name"}>{node.name}</h5>
-                            <TooltipCmp direction={"bottom"} text={"Категория"}>
-                                <div className={"nodes-container__item__attributes"}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5 10H7C9 10 10 9 10 7V5C10 3 9 2 7 2H5C3 2 2 3 2 5V7C2 9 3 10 5 10Z" stroke="#FFFFFF" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M17 10H19C21 10 22 9 22 7V5C22 3 21 2 19 2H17C15 2 14 3 14 5V7C14 9 15 10 17 10Z" stroke="#FFFFFF" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M17 22H19C21 22 22 21 22 19V17C22 15 21 14 19 14H17C15 14 14 15 14 17V19C14 21 15 22 17 22Z" stroke="#FFFFFF" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M5 22H7C9 22 10 21 10 19V17C10 15 9 14 7 14H5C3 14 2 15 2 17V19C2 21 3 22 5 22Z" stroke="#FFFFFF" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                    { node.category }
-                                </div>
-                            </TooltipCmp>
-                            <TooltipCmp direction={"bottom"} text={"Атрибуты"}>
-                                <div className={"nodes-container__item__attributes"}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8 6.00067L21 6.00139M8 12.0007L21 12.0015M8 18.0007L21 18.0015M3.5 6H3.51M3.5 12H3.51M3.5 18H3.51M4 6C4 6.27614 3.77614 6.5 3.5 6.5C3.22386 6.5 3 6.27614 3 6C3 5.72386 3.22386 5.5 3.5 5.5C3.77614 5.5 4 5.72386 4 6ZM4 12C4 12.2761 3.77614 12.5 3.5 12.5C3.22386 12.5 3 12.2761 3 12C3 11.7239 3.22386 11.5 3.5 11.5C3.77614 11.5 4 11.7239 4 12ZM4 18C4 18.2761 3.77614 18.5 3.5 18.5C3.22386 18.5 3 18.2761 3 18C3 17.7239 3.22386 17.5 3.5 17.5C3.77614 17.5 4 17.7239 4 18Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                    { node.attributes.join(",") }
-                                </div>
-                            </TooltipCmp>
-                        </div>
-                    ) :
-                    <span>Доступных узлов нет</span>
-            }
-        </div>
     )
 }
 

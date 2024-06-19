@@ -1,7 +1,7 @@
 import "./style.sass"
 import React, {useEffect, useState} from "react";
 import ModalCmp from "../../components/base/modals/modal-cmp";
-import {useAuth} from "../../utils/AuthProvider";
+import {useAuth} from "../../utils/providers/AuthProvider";
 import ProjectsPage from "../projects-page/projects-page";
 
 type DisplayOption = "login" | "loaded_data";

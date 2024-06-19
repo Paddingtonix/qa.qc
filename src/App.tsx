@@ -1,8 +1,8 @@
 import './App.sass';
 import React from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {useInstanceInterceptors} from "./utils/api";
-import {useAuth} from "./utils/AuthProvider";
+import {useInstanceInterceptors} from "./utils/api/api";
+import {useAuth} from "./utils/providers/AuthProvider";
 import StartDataPage from "./pages/start-page/start-data-page";
 import {ProjectPage} from "./pages/project-page/project-page";
 

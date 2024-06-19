@@ -1,9 +1,9 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {QueryClient, useMutation} from "@tanstack/react-query";
-import {useAuth} from "./AuthProvider";
-import {getAccessToken, getRefreshToken} from "./local-storage";
+import {useAuth} from "../providers/AuthProvider";
+import {getAccessToken, getRefreshToken} from "../helpers/local-storage";
+import {useNotification} from "../../components/base/notification/notification-provider";
 import {service} from "./service";
-import {useNotification} from "../components/base/notification/notification-provider";
 
 export const instance = axios.create({
     baseURL: `https://qa-qc-api.freydin.space/api/v1`,

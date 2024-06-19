@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import "./assets/style/index.sass"
 import {QueryClientProvider} from "@tanstack/react-query";
-import {AuthProvider} from "./utils/AuthProvider";
+import {AuthProvider} from "./utils/providers/AuthProvider";
 import {NotificationProvider} from "./components/base/notification/notification-provider";
-import {queryClient} from "./utils/api";
+import {queryClient} from "./utils/api/api";
 import {BrowserRouter} from "react-router-dom";
 
 const root = ReactDOM.createRoot(

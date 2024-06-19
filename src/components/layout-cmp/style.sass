@@ -21,6 +21,27 @@
       max-width: 1000px
       width: 100%
 
+      > div:first-child
+        display: flex
+        gap: toRem(10)
+
+        ul
+          display: inline
+
+          li
+            display: inline
+
+            a
+              text-decoration: none
+              color: $headers-color
+              transition: .3s
+
+              &:hover
+                color: $primary-color
+
+          li:not(:first-child)
+            margin-left: toRem(20)
+
     &__logo
       display: flex
       align-items: center
