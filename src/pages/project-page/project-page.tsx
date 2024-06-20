@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "./style.sass"
 import {useQuery} from "@tanstack/react-query";
 import {queryKeys, service} from "../../utils/api/service";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import LayoutCmp from "../../components/layout-cmp/layout-cmp";
 import LoaderCmp from "../../components/loader-cmp/loader-cmp";
 import LoadProjectTab from "./load-tab";
@@ -10,9 +10,9 @@ import FilesTab from "./files-tab";
 import DataTab from "./data-tab";
 
 enum ProjectTab {
-    Load = "Load",
-    Files = "Files",
-    Data = "Data"
+    Load = "load",
+    Files = "files",
+    Data = "data"
 }
 
 const ProjectTabItems = [
@@ -24,7 +24,7 @@ const ProjectTabItems = [
 export const ProjectPage = () => {
 
     const {id: projectId} = useParams()
-    const [selectedProjectTab, setSelectedProjectTab] = useState<ProjectTab>(ProjectTab.Load);
+    const [params, setParams] = useSearchParams()
 
     const {data: projectFiles, isLoading} = useQuery({
         queryKey: queryKeys.projectFiles(projectId),
@@ -32,6 +32,8 @@ export const ProjectPage = () => {
         select: ({data}) => data.files,
         enabled: !!projectId
     })
+
+    const currentTab = params.get("t") as ProjectTab || ProjectTab.Load;
 
     const ProjectTabContent: Record<ProjectTab, React.ReactNode> = {
         [ProjectTab.Load]: <LoadProjectTab files={projectFiles}/>,
@@ -49,8 +51,8 @@ export const ProjectPage = () => {
                         {
                             ProjectTabItems?.map(tab =>
                                 <div key={tab.key}
-                                     className={`tabs__item ${tab.key === selectedProjectTab ? "tabs__item_selected" : null}`}
-                                     onClick={() => setSelectedProjectTab(tab.key)}
+                                     className={`tabs__item ${tab.key === currentTab ? "tabs__item_selected" : null}`}
+                                     onClick={() => setParams({t: tab.key})}
                                 >
                                     {tab.name}
                                 </div>)
@@ -58,7 +60,7 @@ export const ProjectPage = () => {
                     </div>
                 </div>
                 <div className={"project-page__content"}>
-                    { isLoading ? <LoaderCmp/> : ProjectTabContent[selectedProjectTab] }
+                    { isLoading ? <LoaderCmp/> : ProjectTabContent[currentTab] || "Раздел не найден" }
                 </div>
             </div>
         </LayoutCmp>
