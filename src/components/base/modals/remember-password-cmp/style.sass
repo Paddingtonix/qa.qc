@@ -1,0 +1,74 @@
+@use "./../../../../assets/style/params.sass" as *
+
+.remember-password-modal
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: toRem(10)
+  text-align: center
+
+  h5
+    margin: 0
+    color: $headers-color
+    font-size: toRem(24)
+
+  span
+    font-size: toRem(18)
+
+  &__contact
+    width: max-content
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    gap: toRem(10)
+    padding: toRem(20)
+    border-radius: toRem(16)
+    text-decoration: none
+    transition: .3s
+
+    img
+      width: toRem(120)
+      border-radius: 100%
+
+    &:hover
+      background-color: $dark-background-color
+
+    h5
+      font-size: toRem(24)
+      color: $headers-color
+      font-weight: bold
+
+    span
+      color: $text-color
+
+  &__to-login
+    width: 100%
+    display: flex
+    justify-content: start
+    margin-top: toRem(20)
+
+    span
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: toRem(5)
+      cursor: pointer
+      font-size: toRem(18)
+      transition: .3s
+
+      svg
+        transition: .3s
+
+      &:hover
+        color: $primary-color
+
+        svg
+          margin-left: -10px
+
+        path
+          stroke: $primary-color
+
+      path
+        stroke: $text-color
+        transition: .3s

@@ -1,0 +1,37 @@
+@use "./../../../../assets/style/params.sass" as *
+
+.login-modal
+  display: flex
+  flex-direction: column
+  gap: 15px
+
+  h5
+    margin: 0 0 20px 0
+    color: $headers-color
+    text-align: center
+    font-size: toRem(24)
+
+  &__error
+    color: $error-color
+
+  &__remember-me
+    display: flex
+    align-items: center
+    gap: 5px
+    color: $headers-color
+
+  button
+    margin-top: 20px
+    width: 100%
+
+  &__forgot-password
+    display: flex
+    justify-content: end
+
+    span
+      cursor: pointer
+      font-size: toRem(14)
+      transition: .3s
+
+      &:hover
+        color: $primary-color

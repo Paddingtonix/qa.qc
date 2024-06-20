@@ -1,0 +1,74 @@
+@use "./../../../assets/style/params.sass" as *
+
+.modal-basic
+  position: fixed
+  top: 0
+  bottom: 0
+  right: 0
+  left: 0
+
+  color: $text-color
+
+  opacity: 0
+  pointer-events: none
+  z-index: -1
+
+  &__overlay
+    width: 100%
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+
+    background-color: rgba(0, 0, 0, 0.6)
+
+    opacity: 0
+    transition: opacity .3s
+
+    &__content
+      max-width: 80%
+      width: 20%
+      position: relative
+      padding: toRem(55)
+
+      background: $background-color
+      border-radius: toRem(8)
+
+      transform: scale(0.5)
+      transition: .3s transform
+
+      &__close-button
+        transition: .3s
+
+        &:after
+          display: flex
+          align-items: center
+          justify-content: center
+          position: absolute
+          right: -30px
+          top: 0
+
+          content: "\00d7"
+          color: white
+          font-size: 32px
+
+          cursor: pointer
+
+  &_opened
+    pointer-events: auto
+    opacity: 1
+    z-index: 1000
+
+    .modal-basic__overlay
+      opacity: 1
+
+      &__content
+        transform: scale(1)
+
+  &_closing
+
+    .modal-basic__overlay
+      opacity: 0
+
+      &__content
+        transform: scale(0.2)
