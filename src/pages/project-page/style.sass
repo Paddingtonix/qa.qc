@@ -222,10 +222,6 @@
         color: $text-color
         margin: toRem(40) 0
 
-    .files-tab__table
-      background-color: $dark-background-color
-      padding: toRem(20)
-
 .data-tab
   display: flex
   gap: toRem(10)
@@ -258,3 +254,77 @@
       font-size: toRem(18)
       color: $text-color
       margin: toRem(40) 0
+
+
+.table-cmp
+  border-collapse: collapse
+  width: 100%
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3)
+
+  th
+    color: $headers-color
+    background: $dark-background-color
+    border-right: 1px solid #363636
+    font-size: 18px
+    padding: 18px 14px
+    text-align: left
+    vertical-align: middle
+
+    &:last-child
+      border-right: none
+
+    .text-left
+      text-align: left
+
+    .text-center
+      text-align: center
+
+    .text-right
+      text-align: right
+
+  tr
+    border-top: 1px solid #363636
+    border-bottom: 1px solid #363636
+    color: $text-color
+    font-size: 16px
+    font-weight: normal
+
+    &:hover
+      td
+        background: #00727c
+        color: #FFFFFF
+
+    &:first-child
+      border-top: none
+
+    &:last-child
+      border-bottom: none
+
+    &:nth-child(odd)
+      td
+        background: #262626
+
+      &:hover
+        td
+          background: #039da8
+
+  td
+    overflow: hidden
+    background: #333333
+    padding: 8px 14px
+    text-align: left
+    font-size: 14px
+    border-right: 1px solid #363636
+    transition: .1s
+
+    &:last-child
+      border-right: 0
+
+    .text-left
+      text-align: left
+
+    .text-center
+      text-align: center
+
+    .text-right
+      text-align: right

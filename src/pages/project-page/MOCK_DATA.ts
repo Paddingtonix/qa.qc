@@ -39,6 +39,49 @@ export const MockDataFiles: TreeItem[] = [
     }
 ]
 
+export const NODES_DATA = [
+    {
+        name: "кво",
+        type: "core_table",
+        attribute: "well_name"
+    },
+    {
+        name: "кп_откр",
+        type: "core_table",
+        attribute: "well"
+    },
+    {
+        name: "кпр_абс",
+        type: "core_table",
+        attribute: "well_name"
+    },
+    {
+        name: "кво_2",
+        type: "core_table",
+        attribute: "well_name"
+    },
+    {
+        name: "кп_откр_2",
+        type: "core_table",
+        attribute: "well_name"
+    },
+    {
+        name: "кпр_абс_2",
+        type: "core_table",
+        attribute: "well"
+    },
+    {
+        name: "кво_3",
+        type: "core_table",
+        attribute: "well"
+    },
+    {
+        name: "кпр_абс_3",
+        type: "core_table",
+        attribute: "well_name"
+    }
+]
+
 export const MockDataData: TreeItem[] = [
     {
         value: "Узлы данных",
