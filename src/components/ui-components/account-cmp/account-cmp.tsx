@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {useAuth} from "../../utils/providers/AuthProvider";
-import {useOutsideClick} from "../../utils/hooks/use-outside-click";
 import "./style.sass"
+import {useAuth} from "../../../utils/providers/AuthProvider";
+import {useOutsideClick} from "../../../utils/hooks/use-outside-click";
 
 const AccountCmp = () => {
 

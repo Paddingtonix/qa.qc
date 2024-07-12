@@ -1,4 +1,4 @@
-import {TreeItem} from "../../components/tree/Tree";
+import {TreeItem} from "../../components/base/tree/Tree";
 
 export const MockDataFiles: TreeItem[] = [
     {

@@ -1,8 +1,8 @@
 import "./style.sass"
 import {ReactNode} from "react";
-import AccountCmp from "../account-cmp/account-cmp";
 import {Link} from "react-router-dom";
-import {RouterLinks} from "../../App";
+import {RouterLinks} from "../../../App";
+import AccountCmp from "./../account-cmp/account-cmp";
 
 interface Props {
     children?: ReactNode

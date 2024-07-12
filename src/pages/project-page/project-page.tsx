@@ -3,11 +3,11 @@ import "./style.sass"
 import {useQuery} from "@tanstack/react-query";
 import {queryKeys, service} from "../../utils/api/service";
 import {useParams, useSearchParams} from "react-router-dom";
-import PageLayoutCmp from "../../components/page-layout-cmp/page-layout-cmp";
-import LoaderCmp from "../../components/loader-cmp/loader-cmp";
 import LoadProjectTab from "./load-tab";
 import FilesTab from "./files-tab";
 import DataTab from "./data-tab";
+import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
+import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 
 enum ProjectTab {
     Load = "load",

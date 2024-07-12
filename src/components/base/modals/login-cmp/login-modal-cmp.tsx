@@ -1,14 +1,14 @@
 import {useAuth} from "../../../../utils/providers/AuthProvider";
 import React, {useState} from "react";
 import {LoginCredentials, service} from "../../../../utils/api/service";
-import InputCmp from "../../../input-cmp/input-cmp";
-import {CheckboxCmp} from "../../../checkbox-cmp/checkbox-cmp";
-import {ButtonCmp} from "../../../button-cmp/button-cmp";
 import {useMutation} from "@tanstack/react-query";
 import "./style.sass"
 import {FormField, useForm} from "../../../../utils/hooks/use-form";
 import {ModalContentProps} from "../modal-cmp";
 import {useNotification} from "../../notification/notification-provider";
+import InputCmp from "../../input-cmp/input-cmp";
+import {CheckboxCmp} from "../../checkbox-cmp/checkbox-cmp";
+import {ButtonCmp} from "../../button-cmp/button-cmp";
 
 
 const LoginModalCmp = (props: ModalContentProps) => {

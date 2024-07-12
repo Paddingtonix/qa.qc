@@ -1,13 +1,13 @@
 import "./style.sass"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {CreateProjectDto, queryKeys, service} from "../../utils/api/service";
-import PageLayoutCmp from "../../components/page-layout-cmp/page-layout-cmp";
+import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
 import {generatePath, Link} from "react-router-dom";
 import {RouterLinks} from "../../App";
 import {useNotification} from "../../components/base/notification/notification-provider";
 import {useState} from "react";
-import TooltipCmp from "../../components/tooltip-cmp/tooltip-cmp";
-import LoaderCmp from "../../components/loader-cmp/loader-cmp";
+import TooltipCmp from "../../components/base/tooltip-cmp/tooltip-cmp";
+import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 
 const ProjectsPage = () => {
 

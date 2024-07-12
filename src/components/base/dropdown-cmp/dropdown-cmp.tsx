@@ -1,6 +1,6 @@
 import "./style.sass"
 import {useState} from "react";
-import {useOutsideClick} from "../../utils/hooks/use-outside-click";
+import {useOutsideClick} from "../../../utils/hooks/use-outside-click";
 
 interface DropdownCmpProps {
     items?: { key: string, title: string }[],

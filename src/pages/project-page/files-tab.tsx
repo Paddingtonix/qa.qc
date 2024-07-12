@@ -1,4 +1,4 @@
-import Tree from "../../components/tree/Tree";
+import Tree from "../../components/base/tree/Tree";
 import {useState} from "react";
 import {MockDataFiles, NODES_DATA} from "./MOCK_DATA";
 import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";

@@ -1,6 +1,6 @@
-import Tree from "../../components/tree/Tree";
 import {useState} from "react";
 import {MockDataData} from "./MOCK_DATA";
+import Tree from "../../components/base/tree/Tree";
 
 const DataTab = () => {
 

@@ -1,7 +1,7 @@
 import "./style.sass"
-import DropdownCmp from "../../components/dropdown-cmp/dropdown-cmp";
+import DropdownCmp from "../../components/base/dropdown-cmp/dropdown-cmp";
 import {FileWithPath, useDropzone} from "react-dropzone";
-import {ButtonCmp} from "../../components/button-cmp/button-cmp";
+import {ButtonCmp} from "../../components/base/button-cmp/button-cmp";
 import {useState} from "react";
 import {ProjectFileDto, queryKeys, service, UploadTestFileDto} from "../../utils/api/service";
 import {useNotification} from "../../components/base/notification/notification-provider";
