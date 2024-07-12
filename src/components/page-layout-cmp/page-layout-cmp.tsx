@@ -2,16 +2,16 @@ import "./style.sass"
 import {ReactNode} from "react";
 import AccountCmp from "../account-cmp/account-cmp";
 import {Link} from "react-router-dom";
-import {Links} from "../../App";
+import {RouterLinks} from "../../App";
 
 interface Props {
     children?: ReactNode
 }
 
-const LayoutCmp = ({children}: Props) => {
+const PageLayoutCmp = ({children}: Props) => {
 
     const HeaderMenuItems = [
-        {title: "Проекты", link: Links.Start}
+        { title: "Проекты", link: RouterLinks.Start }
     ]
 
     return (
@@ -19,7 +19,7 @@ const LayoutCmp = ({children}: Props) => {
             <div className={"layout-header"}>
                 <div className={"layout-header__content"}>
                     <div>
-                        <Link to={Links.Start} className={"layout-header__logo"}>
+                        <Link to={RouterLinks.Start} className={"layout-header__logo"}>
                             <h5>QA</h5><span>\</span><h5>QC</h5>
                         </Link>
                         <ul>
@@ -42,4 +42,4 @@ const LayoutCmp = ({children}: Props) => {
     )
 }
 
-export default LayoutCmp;
+export default PageLayoutCmp;

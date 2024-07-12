@@ -12,14 +12,20 @@ function App() {
 
     return (
         <Routes>
-            <Route path={Links.Start} element={<StartDataPage/>}/>
-            <Route path={Links.Project} element={<PrivateRoute><ProjectPage/></PrivateRoute>}/>
-            <Route path={Links.NotFound} element={<Navigate to={Links.Start}/>}/>
+            {
+                Router.map(route =>
+                    <Route
+                        path={route.link}
+                        element={route.isPrivate ? <PrivateRoute>{route.element}</PrivateRoute> : route.element}
+                        key={route.link}
+                    />)
+            }
         </Routes>
     );
 }
 
-export const Links = {
+
+export const RouterLinks = {
     Start: "/",
     LoadData: "/data",
     Project: "/project/:id",
@@ -27,12 +33,28 @@ export const Links = {
     NotFound: "/*"
 }
 
+const Router = [
+    {
+        link: RouterLinks.Start,
+        element: <StartDataPage/>,
+    },
+    {
+        link: RouterLinks.Project,
+        element: <ProjectPage/>,
+        isPrivate: true
+    },
+    {
+        link: RouterLinks.NotFound,
+        element: <Navigate to={RouterLinks.Start}/>,
+    },
+]
+
 //Хок, делающий путь недоступным для неавторизованного пользователя
 const PrivateRoute = ({children}: {children: React.ReactElement}) => {
     const {isAuth} = useAuth();
 
     return (
-        isAuth ? children : <Navigate to={Links.Start}/>
+        isAuth ? children : <Navigate to={RouterLinks.Start}/>
     )
 }
 

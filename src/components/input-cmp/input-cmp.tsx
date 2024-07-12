@@ -1,5 +1,5 @@
 import "./style.sass"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 interface InputProps {
     value: string,
@@ -7,10 +7,8 @@ interface InputProps {
     error?: string,
     type?: "text" | "password" | "number" | "email",
     name?: string,
-    rules?: {
-        required?: boolean,
-        pattern?: string
-    },
+    isRequired?: boolean,
+    pattern?: string,
     checkRules?: boolean
 
     onChange(value: string): void
@@ -23,18 +21,24 @@ const InputCmp = (props: InputProps) => {
         label,
         type,
         name,
-        rules,
-        checkRules,
+        isRequired,
+        pattern,
+        checkRules: checkRulesGlobal,
         onChange,
     } = props;
 
     const [hidePassword, setHidePassword] = useState(true);
+    const [checkRules, setCheckRules] = useState(checkRulesGlobal);
+
+    useEffect(() => {
+        if (checkRulesGlobal) setCheckRules(true);
+    }, [checkRulesGlobal])
 
     const isError = () => {
         if (!checkRules) return false;
-        if (rules?.required && !value)
+        if (isRequired && !value)
             return "Обязательное поле";
-        else if (rules?.pattern && !(new RegExp(rules.pattern).test(value)))
+        else if (pattern && !(new RegExp(pattern).test(value)))
             return "Некорректный формат";
         return false;
     }
@@ -48,6 +52,7 @@ const InputCmp = (props: InputProps) => {
                     value={value}
                     name={name}
                     onChange={(e) => onChange(e.target.value)}
+                    onBlur={() => setCheckRules(true)}
                 />
                 <label className={`input-cmp__label ${value && "input-cmp__label_fill"}`}>{label}</label>
                 {

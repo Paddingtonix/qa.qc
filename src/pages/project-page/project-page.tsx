@@ -3,7 +3,7 @@ import "./style.sass"
 import {useQuery} from "@tanstack/react-query";
 import {queryKeys, service} from "../../utils/api/service";
 import {useParams, useSearchParams} from "react-router-dom";
-import LayoutCmp from "../../components/layout-cmp/layout-cmp";
+import PageLayoutCmp from "../../components/page-layout-cmp/page-layout-cmp";
 import LoaderCmp from "../../components/loader-cmp/loader-cmp";
 import LoadProjectTab from "./load-tab";
 import FilesTab from "./files-tab";
@@ -42,7 +42,7 @@ export const ProjectPage = () => {
     }
 
     return (
-        <LayoutCmp>
+        <PageLayoutCmp>
             <div className="project-page">
                 <div className={"project-page__header"}>
                     <h2>Project name</h2>
@@ -63,7 +63,7 @@ export const ProjectPage = () => {
                     { isLoading ? <LoaderCmp/> : ProjectTabContent[currentTab] || "Раздел не найден" }
                 </div>
             </div>
-        </LayoutCmp>
+        </PageLayoutCmp>
     )
 }
 

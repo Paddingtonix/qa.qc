@@ -1,9 +1,9 @@
 import "./style.sass"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {CreateProjectDto, queryKeys, service} from "../../utils/api/service";
-import LayoutCmp from "../../components/layout-cmp/layout-cmp";
+import PageLayoutCmp from "../../components/page-layout-cmp/page-layout-cmp";
 import {generatePath, Link} from "react-router-dom";
-import {Links} from "../../App";
+import {RouterLinks} from "../../App";
 import {useNotification} from "../../components/base/notification/notification-provider";
 import {useState} from "react";
 import TooltipCmp from "../../components/tooltip-cmp/tooltip-cmp";
@@ -18,7 +18,7 @@ const ProjectsPage = () => {
     })
 
     return (
-        <LayoutCmp>
+        <PageLayoutCmp>
             <div className={"projects-page"}>
                 <div>
                     <h2>Проекты</h2>
@@ -28,7 +28,7 @@ const ProjectsPage = () => {
                     <div className={"projects-page__projects-list"}>
                         {isLoading ? <LoaderCmp/> :
                             projects?.map(project =>
-                                <Link to={generatePath(Links.Project, {id: project.id})}
+                                <Link to={generatePath(RouterLinks.Project, {id: project.id})}
                                       className={"project-card"} key={project.id}>
                                     <span>{project.name}</span>
                                     <TooltipCmp text={"Удалить"} direction={"top"}>
@@ -45,7 +45,7 @@ const ProjectsPage = () => {
                     </div>
                 </div>
             </div>
-        </LayoutCmp>
+        </PageLayoutCmp>
 
     )
 }

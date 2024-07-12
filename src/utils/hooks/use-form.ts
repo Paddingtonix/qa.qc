@@ -5,10 +5,8 @@ export type FormField = {
     name: string,
     label: string,
     value: string,
-    rules?: {
-        required?: boolean,
-        pattern?: string
-    }
+    isRequired?: boolean,
+    pattern?: string
 }
 
 export function useForm(formFields: FormField[]) {
@@ -20,11 +18,11 @@ export function useForm(formFields: FormField[]) {
 
     //Установка нового значения полю формы
     const setFieldValue = useCallback((value: string, name: string) => {
-        const updateForm = fields.map(it => {
-            if (it.name !== name) return it;
+        const updateForm = fields.map(field => {
+            if (field.name !== name) return field;
             else {
                 return {
-                    ...it,
+                    ...field,
                     value: value,
                 };
             }
@@ -39,9 +37,9 @@ export function useForm(formFields: FormField[]) {
 
         //Валидация формы
         const isCheckFailed = fields.findIndex(it => {
-            if (it.rules?.required && !it.value)
+            if (it.isRequired && !it.value)
                 return true;
-            else if (it.rules?.pattern && !(new RegExp(it.rules.pattern).test(it.value)))
+            else if (it.pattern && !(new RegExp(it.pattern).test(it.value)))
                 return true;
             return false;
         })

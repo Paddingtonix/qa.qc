@@ -35,16 +35,16 @@ const LoginModalCmp = (props: ModalContentProps) => {
         <form onSubmit={handleSubmit(onSubmit)} className={"login-modal"}>
             <h5>ВХОД В СИСТЕМУ QA/QC</h5>
             {
-                fields.map(it =>
+                fields.map(field =>
                     <InputCmp
-                        value={it.value}
-                        onChange={(value) => setFieldValue(value, it.name)}
-                        label={it.label}
-                        name={it.name}
-                        rules={it.rules}
-                        type={it.type}
+                        value={field.value}
+                        onChange={(value) => setFieldValue(value, field.name)}
+                        label={field.label}
+                        name={field.name}
+                        isRequired={field.isRequired}
+                        type={field.type}
                         checkRules={checkForm}
-                        key={it.name}
+                        key={field.name}
                     />
                 )
             }
@@ -71,14 +71,14 @@ const FormLogin: FormField[] = [
         name: "email",
         label: "Логин",
         value: "",
-        rules: {required: true}
+        isRequired: true
     },
     {
         type: "password",
         name: "password",
         label: "Пароль",
         value: "",
-        rules: {required: true}
+        isRequired: true
     },
 ]
 
