@@ -1,0 +1,132 @@
+@use "./../../../assets/style/params.sass" as *
+
+
+.tooltip
+
+  position: relative
+  display: flex
+  width: max-content
+  height: max-content
+
+  &_show
+    &:after
+
+      position: absolute
+
+      border: toRem(7) solid
+      border-color: transparent $dark-background-color transparent transparent
+
+      content: ""
+      z-index: 100
+      animation: appearanceAni .2s forwards
+
+
+
+  &_direction_topLeft, &_direction_topRight, &_direction_top
+    &:after
+      top: toRem(-11)
+      left: 50%
+      transform: translateX(-50%) rotate(270deg)
+
+
+
+  &_direction_bottomLeft, &_direction_bottomRight, &_direction_bottom
+    &:after
+      bottom: toRem(-11)
+      left: 50%
+      transform: translateX(-50%) rotate(90deg)
+
+
+
+  &_direction_leftTop, &_direction_leftBottom, &_direction_left
+    &:after
+      left: toRem(-11)
+      top: 50%
+      transform: translateY(-50%) rotate(180deg)
+
+
+
+  &_direction_rightTop, &_direction_rightBottom, &_direction_right
+    &:after
+      right: toRem(-11)
+      top: 50%
+      transform: translateY(-50%) rotate(0deg)
+
+
+
+  &__text
+
+    width: max-content
+    max-width: toRem(300)
+
+    position: absolute
+
+    padding: toRem(6) toRem(12)
+    margin-right: calc(100%)
+
+    font-size: toRem(14)
+    text-align: center
+    white-space: pre-line
+
+    color: $headers-color
+    background-color: $dark-background-color
+
+    border-radius: toRem(4)
+
+    pointer-events: none
+    z-index: 100
+    animation: appearanceAnimation .2s forwards
+
+    &_direction_topLeft, &_direction_topRight, &_direction_top
+      bottom: calc(100% + 11px)
+
+
+    &_direction_bottomLeft, &_direction_bottomRight, &_direction_bottom
+      top: calc(100% + 11px)
+
+
+    &_direction_leftTop, &_direction_leftBottom, &_direction_left
+      right: 11px
+
+
+    &_direction_rightTop, &_direction_rightBottom, &_direction_right
+      left: calc(100% + 11px)
+
+
+    &_direction_left, &_direction_right
+      top: 50%
+      transform: translateY(-50%)
+
+
+    &_direction_leftTop, &_direction_rightTop
+      top: 50%
+      transform: translateY(-11px)
+
+
+    &_direction_leftBottom, &_direction_rightBottom
+      top: 50%
+      transform: translateY(calc(-100% + 11px))
+
+
+    &_direction_bottom, &_direction_top
+      left: 50%
+      transform: translateX(-50%)
+
+
+    &_direction_topLeft, &_direction_bottomLeft
+      left: 50%
+      transform: translateX(-11px)
+
+
+    &_direction_topRight, &_direction_bottomRight
+      left: 50%
+      transform: translateX(calc(-100% + 11px))
+
+
+
+  @keyframes appearanceAnimation
+    0%
+      opacity: 0
+
+    100%
+      opacity: 100%

@@ -1,0 +1,101 @@
+@use "../../assets/style/params.sass" as *
+
+.projects-page
+  display: flex
+  justify-content: center
+
+  > div
+    max-width: 1000px
+    width: 100%
+    display: flex
+    flex-direction: column
+
+    h2
+      color: $headers-color
+      font-size: toRem(28)
+      text-transform: uppercase
+
+    div:nth-child(2)
+      display: flex
+      justify-content: end
+
+  &__projects-list
+    display: flex
+    flex-direction: column
+    gap: 10px
+    margin-top: toRem(20)
+
+  .project-card
+    display: flex
+    justify-content: space-between
+    align-items: center
+    background-color: $dark-background-color
+    color: $headers-color
+    text-decoration: none
+    text-transform: uppercase
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
+    padding: toRem(25)
+    transition: .3s
+
+    &:hover
+      color: $primary-color
+
+      .project-card__delete-button
+        transition: .3s
+        opacity: 1
+
+    > span
+      font-size: toRem(20)
+
+    &__delete-button
+      transition: 0s
+      opacity: 0
+      fill: $headers-color
+
+      &:hover
+        filter: brightness(.5)
+
+
+  &__create-button-container
+    display: flex
+    align-items: center
+    gap: toRem(5)
+    height: toRem(36)
+
+    svg
+      cursor: pointer
+
+      path
+        fill: #ffffff
+        transition: .3s
+
+      &:hover
+        path
+          fill: $primary-color
+
+  &__create-button
+    width: max-content
+    display: flex
+    align-items: center
+    gap: toRem(5)
+    padding: toRem(10) toRem(32)
+    justify-content: center
+    background-color: transparent
+    border: 1px solid $text-color
+    border-radius: toRem(24)
+    color: $headers-color
+    text-transform: uppercase
+    transition: .3s
+
+    &:hover
+      color: $primary-color
+      border-color: $primary-color
+
+    &_normal
+      cursor: pointer
+
+    &_edit
+      border-color: $primary-color
+
+      input
+        border-bottom: 1px solid $text-color

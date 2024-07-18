@@ -1,0 +1,103 @@
+@use "./../../../assets/style/params.sass" as *
+
+.input-field
+  width: 100%
+
+  .input-cmp
+    width: 100%
+    position: relative
+    display: flex
+    align-items: center
+    background-color: #092B2E
+    border-radius: toRem(6)
+
+    &__value
+      height: 100%
+      width: 100%
+      padding: toRem(8) toRem(8)
+      background-color: $background-color
+      border: 1px solid $text-color
+      color: $headers-color
+      border-radius: toRem(6)
+      font-size: toRem(16)
+      transition: border .2s
+
+      &:focus
+        border-color: $primary-color
+
+        + label
+          top: 0
+          color: $primary-color
+          font-size: toRem(12)
+
+      &:hover
+        border-color: $primary-color
+
+      &_error
+        border-color: red
+
+        + label
+          color: red
+
+      &_error:hover
+        border-color: red
+
+      &_error:focus
+        border-color: red
+
+        + label
+          color: red
+
+    &__label
+      position: absolute
+      top: 50%
+      left: toRem(8)
+      padding: 0 toRem(2)
+      background-color: $background-color
+      color: $text-color
+      border-radius: toRem(2)
+      font-size: toRem(16)
+      font-weight: normal
+      pointer-events: none
+      transform: translateY(-50%)
+      transition: .2s
+
+      &_fill
+        font-size: toRem(12)
+        top: 0
+
+    &__password-eye
+      position: absolute
+      right: toRem(3)
+      padding: 0 toRem(4)
+      background-color: $background-color
+      cursor: pointer
+      transition: .3s
+
+      path
+        stroke: $text-color
+        transition: .3s
+
+      &:hover
+        path
+          stroke: #858585
+
+      &_show
+        path
+          stroke: $primary-color
+
+      &_show:hover
+        path
+          stroke: $dark-primary
+
+  .error-text
+    max-height: 0
+
+    color: red
+    font-size: toRem(12)
+
+    overflow: hidden
+    transition: max-height .2s
+
+    &_show
+      max-height: toRem(40)

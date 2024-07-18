@@ -1,0 +1,31 @@
+@use "./../../../assets/style/params.sass" as *
+
+.checkbox
+    display: flex
+    align-items: center
+    cursor: pointer
+
+    span
+        color: $headers-color
+        font-size: toRem(18)
+        transition: color .2s
+
+    &:hover
+        .checkbox__frame
+            border-color: $primary-color
+
+        svg path
+            fill: $primary-color
+
+        span
+            color: $primary-color
+
+    &__frame
+        border: 1px solid $headers-color
+        display: flex
+        align-items: center
+        justify-content: center
+        border-radius: toRem(4)
+        transition: border .2s
+        width: toRem(20)
+        height: toRem(20)

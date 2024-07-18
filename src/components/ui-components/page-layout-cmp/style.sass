@@ -1,0 +1,62 @@
+@use "./../../../assets/style/params.sass" as *
+
+.layout-cmp
+  min-height: 100vh
+  background-color: $background-color
+
+  .layout-header
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    position: fixed
+    height: 50px
+    background-color: rgba(40, 40, 40, 0.91)
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3)
+    z-index: 100
+
+    &__content
+      display: flex
+      justify-content: space-between
+      align-items: center
+      max-width: 1000px
+      width: 100%
+
+      > div:first-child
+        display: flex
+        gap: toRem(10)
+
+        ul
+
+          li
+            display: inline
+
+            a
+              text-decoration: none
+              color: $headers-color
+              transition: .3s
+
+              &:hover
+                color: $primary-color
+
+          li:not(:first-child)
+            margin-left: toRem(20)
+
+    &__logo
+      display: flex
+      align-items: center
+      text-decoration: none
+
+      h5
+        color: $headers-color
+        margin: 0
+        font-size: toRem(24)
+        letter-spacing: toRem(1)
+
+
+      span
+        color: $primary-color
+        font-size: toRem(24)
+
+  .layout-content
+    padding: toRem(80) toRem(10) toRem(50) toRem(10)

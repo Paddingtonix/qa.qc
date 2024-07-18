@@ -1,0 +1,61 @@
+@use "./../../../assets/style/params.sass" as *
+
+.tree-cmp
+
+  ul
+    list-style-type: none
+    padding: 0 0 0 toRem(40)
+    border-left: 1px solid #3a3a3a
+
+    .tree-item
+      margin-top: toRem(10)
+      transition: .3s
+
+      &_ended
+        margin-top: toRem(5)
+        padding: toRem(5) toRem(10)
+
+      &_selected
+        background-color: $primary-ghost-color
+
+        > div > span
+          color: $primary-color
+
+      &_open
+        > div
+          svg
+            transform: rotateX(180deg)
+
+      > div
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: toRem(5)
+        cursor: pointer
+        transition: .3s
+
+        > span
+          font-size: toRem(16)
+          text-overflow: ellipsis
+          overflow: hidden
+          white-space: nowrap
+
+        &:hover
+          color: $primary-color
+
+          svg
+            fill: $primary-color
+
+        svg
+          fill: $text-color
+          transition: .3s
+
+  ul:first-child
+    border: none
+    padding-left: 0
+
+    > .tree-item
+      margin-bottom: toRem(30)
+
+      > div > span
+        font-size: toRem(20)

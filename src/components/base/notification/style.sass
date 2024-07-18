@@ -1,0 +1,89 @@
+@use "./../../../assets/style/params.sass" as *
+
+.notification-container
+  position: fixed
+  display: flex
+  flex-direction: column-reverse
+  bottom: toRem(16)
+  right: toRem(16)
+  z-index: 10000
+
+.notification-cmp
+  max-width: toRem(450)
+  min-width: toRem(100)
+  max-height: toRem(200)
+  border-radius: toRem(4)
+  overflow: hidden
+  transition: max-height .3s ease-out
+
+  &:not(:first-child)
+    margin-bottom: toRem(8)
+
+  &_shrink
+    max-height: 0
+
+  .content
+    position: relative
+    display: flex
+    align-items: start
+    justify-content: space-between
+    gap: toRem(8)
+    padding: toRem(16) toRem(8)
+    background-color: $dark-background-color
+    color: $headers-color
+    font-weight: normal
+    border-left: toRem(5) solid white
+    border-radius: toRem(4)
+    overflow: hidden
+    z-index: 1000
+    transition: transform .3s ease-out
+
+    &__close-button
+      background: transparent
+      border: none
+      cursor: pointer
+
+      path
+        fill: $text-color
+
+    &__icon
+      display: flex
+      width: toRem(24)
+
+    &:not(:last-child)
+      margin-bottom: toRem(8)
+
+    &_warning
+      border-color: $notification-warning-color
+
+      .content__icon
+        path
+          fill: $notification-warning-color
+
+    &_success
+      border-color: $notification-success-color
+
+      .content__icon
+        path
+          fill: $notification-success-color
+
+    &_error
+      border-color: $notification-error-color
+
+      .content__icon
+        path
+          fill: $notification-error-color
+
+    &_slide-out
+      transform: translateX(150%)
+      flex: 0
+
+    &_slide-in
+      animation: slideIn ease-in-out .3s
+
+    @keyframes slideIn
+      from
+        transform: translateX(100%)
+
+      to
+        transform: translateX(0%)

@@ -1,0 +1,330 @@
+@use "../../assets/style/params.sass" as *
+
+.project-page
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 10px
+  color: $headers-color
+
+  &__header
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    width: toRem(1140)
+    gap: toRem(20)
+    padding: toRem(10) 0 0 0
+
+    h2
+      color: $headers-color
+      font-size: toRem(28)
+
+    h5
+      color: $text-color
+      font-size: toRem(16)
+      font-weight: normal
+
+    .tabs
+      display: flex
+      flex-wrap: wrap
+      gap: toRem(5)
+      padding: toRem(10) 0 0 0
+      border-bottom: 1px solid #3a3a3a
+
+      .tabs__item
+        border-bottom: 1px solid transparent
+        padding: toRem(15) toRem(20)
+        background-color: transparent
+        cursor: pointer
+        color: $headers-color
+        transition: .3s
+
+        &:hover
+          border-color: $primary-color
+          background-color: $primary-ghost-color
+
+        &_selected
+          border-color: $primary-color
+
+  &__content
+    width: toRem(1140)
+
+
+.load-tab
+  display: flex
+  gap: 10px
+  position: relative
+
+  &__categories-container
+    background-color: $dark-background-color
+    padding: toRem(20)
+    flex: 1 1 0
+
+    &__empty
+      height: 100%
+      display: flex
+      justify-content: center
+      align-items: center
+      color: $text-color
+
+    .category-files
+
+      &_open > span
+        color: $primary-color
+
+        .category-files__dropdown
+          > svg
+            rotate: 180deg
+
+      &__list
+        display: none
+        grid-template-columns: repeat(2, 1fr)
+        gap: 10px
+        padding: toRem(10) 0
+
+        &_open
+          display: grid
+
+        > span
+          padding: toRem(10) toRem(5)
+          color: $text-color
+
+      > span
+        text-transform: uppercase
+        cursor: pointer
+        display: flex
+        justify-content: space-between
+        align-items: center
+        width: 100%
+        padding: toRem(5)
+        transition: .3s
+
+        .category-files__dropdown
+          display: flex
+          gap: toRem(10)
+
+          > div
+            display: flex
+            align-items: center
+            gap: toRem(3)
+            color: $text-color
+
+  &__upload-container
+    position: sticky
+    top: toRem(100)
+    width: toRem(350)
+    display: flex
+    flex-direction: column
+    gap: toRem(10)
+    height: max-content
+
+    background-color: $dark-background-color
+    padding: toRem(20)
+
+    .files-container
+      display: flex
+      flex-direction: column
+      gap: 10px
+      width: 100%
+
+    h4
+      margin: 0 0 10px 0
+      font-size: toRem(18)
+      letter-spacing: 1px
+      font-weight: normal
+
+    button
+      width: 100%
+
+    .custom-dropzone
+      border: 2px dotted $primary-color
+      background-color: $primary-ghost-color
+      color: #8d8d8d
+      padding: toRem(15)
+      text-align: center
+      transition: .3s
+      cursor: pointer
+
+      &:hover
+        background-color: rgba(14, 156, 162, 0.18)
+        color: $headers-color
+
+      p
+        margin: 0
+
+  .file-card
+    display: flex
+    padding: toRem(15)
+    background-color: $background-color
+    color: #8d8d8d
+    border-radius: toRem(6)
+    align-items: center
+    gap: toRem(5)
+
+    &__info
+      display: flex
+      flex-direction: column
+      flex: 1 1 0
+      gap: toRem(5)
+      padding: toRem(5)
+
+      h5
+        color: $headers-color
+        font-weight: normal
+        margin: 0
+
+      a
+        color: $headers-color
+        font-weight: normal
+        text-decoration: none
+
+      a:hover
+        text-decoration: underline
+
+
+.files-tab
+  display: flex
+  gap: toRem(10)
+
+  &__tree
+    background-color: $dark-background-color
+    padding: toRem(20) toRem(40)
+    width: toRem(350)
+
+  > div:nth-child(2)
+    display: flex
+    flex-direction: column
+    gap: toRem(10)
+    flex: 1 1 0
+
+    .files-tab__info
+      display: flex
+      flex-direction: column
+      gap: toRem(10)
+      background-color: $dark-background-color
+      padding: toRem(20)
+
+      h4
+        font-weight: normal
+        font-size: toRem(24)
+        color: $headers-color
+
+      p
+        font-size: toRem(18)
+        color: $text-color
+
+      h5
+        text-align: center
+        font-weight: normal
+        font-size: toRem(18)
+        color: $text-color
+        margin: toRem(40) 0
+
+.data-tab
+  display: flex
+  gap: toRem(10)
+
+  &__tree
+    background-color: $dark-background-color
+    padding: toRem(20) toRem(40)
+    width: toRem(350)
+
+  &__info
+    display: flex
+    flex: 1 1 0
+    flex-direction: column
+    gap: toRem(10)
+    background-color: $dark-background-color
+    padding: toRem(20)
+
+    h4
+      font-weight: normal
+      font-size: toRem(24)
+      color: $headers-color
+
+    p
+      font-size: toRem(18)
+      color: $text-color
+
+    h5
+      text-align: center
+      font-weight: normal
+      font-size: toRem(18)
+      color: $text-color
+      margin: toRem(40) 0
+
+
+.table-cmp
+  border-collapse: collapse
+  width: 100%
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3)
+
+  th
+    color: $headers-color
+    background: $dark-background-color
+    border-right: 1px solid #363636
+    font-size: 18px
+    padding: 18px 14px
+    text-align: left
+    vertical-align: middle
+
+    &:last-child
+      border-right: none
+
+    .text-left
+      text-align: left
+
+    .text-center
+      text-align: center
+
+    .text-right
+      text-align: right
+
+  tr
+    border-top: 1px solid #363636
+    border-bottom: 1px solid #363636
+    color: $text-color
+    font-size: 16px
+    font-weight: normal
+
+    &:hover
+      td
+        background: #00727c
+        color: #FFFFFF
+
+    &:first-child
+      border-top: none
+
+    &:last-child
+      border-bottom: none
+
+    &:nth-child(odd)
+      td
+        background: #262626
+
+      &:hover
+        td
+          background: #039da8
+
+  td
+    overflow: hidden
+    background: #333333
+    padding: 8px 14px
+    text-align: left
+    font-size: 14px
+    border-right: 1px solid #363636
+    transition: .1s
+
+    &:last-child
+      border-right: 0
+
+    .text-left
+      text-align: left
+
+    .text-center
+      text-align: center
+
+    .text-right
+      text-align: right
