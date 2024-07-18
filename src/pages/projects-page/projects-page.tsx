@@ -14,7 +14,7 @@ const ProjectsPage = () => {
     const {data: projects, isLoading} = useQuery({
         queryKey: queryKeys.projects(),
         queryFn: () => service.getProjects(),
-        select: ({data}) => data.projects
+        select: ({data}) => data
     })
 
     return (
@@ -27,10 +27,10 @@ const ProjectsPage = () => {
                     </div>
                     <div className={"projects-page__projects-list"}>
                         {isLoading ? <LoaderCmp/> :
-                            projects?.map(project =>
-                                <Link to={generatePath(RouterLinks.Project, {id: project.id})}
-                                      className={"project-card"} key={project.id}>
-                                    <span>{project.name}</span>
+                            projects?.owned_projects.map(project =>
+                                <Link to={generatePath(RouterLinks.Project, {id: project.project_id})}
+                                      className={"project-card"} key={project.project_id}>
+                                    <span>{project.project_name}</span>
                                     <TooltipCmp text={"Удалить"} direction={"top"}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                              className={"project-card__delete-button"}
@@ -68,7 +68,7 @@ const CreateProjectButton = () => {
 
     const onCreate = () => {
         if (!name) return;
-        createProject({name}).then(() => {
+        createProject({project_name: name}).then(() => {
             setMode(false);
             setName("");
         })

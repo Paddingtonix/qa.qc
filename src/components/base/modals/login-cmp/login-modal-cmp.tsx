@@ -22,7 +22,7 @@ const LoginModalCmp = (props: ModalContentProps) => {
     const {mutate: login, isPending, error} = useMutation({
         mutationFn: (data: LoginCredentials) => service.login(data),
         onSuccess: ({data}) => {
-            signIn(data.token, data.refreshToken, rememberMe);
+            signIn(data.auth_token, data.refresh_token, rememberMe);
             toastSuccess("Вы успешно вошли в систему!")
         }
     });

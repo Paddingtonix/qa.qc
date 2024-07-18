@@ -2,41 +2,53 @@ import {instance} from "./api";
 
 class Service {
 
-
     async getProjects() {
-        return instance.get<{projects: ProjectDto[]}>(`/project/get`)
+        return instance.get<UserProjectsDto>(`/project/get/`)
+    }
+
+    async getProjectCategories(projectId: string) {
+        return instance.get<{categories: CategoryDto[]}>(`/project/${projectId}/categories/get/`)
     }
 
     async getProjectFiles(projectId: string) {
-        return instance.get<{files: ProjectFileDto[]}>(`/project/${projectId}/file/get`)
+        return instance.get<{files: ProjectFileDto[]}>(`/project/${projectId}/file/get/all/`)
     }
 
     async getProjectTests(projectId: string) {
-        return instance.get<{result: {message: string, tests: TestDto[]}}>(`/project/${projectId}/test/get`)
+        return instance.get<{result: {message: string, tests: TestDto[]}}>(`/project/${projectId}/test/get/`)
     }
 
     async getProjectNodes(projectId: string) {
-        return instance.get<{nodes: NodeDto[]}>(`/project/${projectId}/node/get`)
+        return instance.get<{nodes: NodeDto[]}>(`/project/${projectId}/node/get/`)
     }
 
     async createProject(data: CreateProjectDto) {
-        return instance.post(`/project/create`, data)
+        return instance.post(`/project/create_project/`, data)
+    }
+
+    async getProjectData(projectId: string) {
+        return instance.get<ProjectDataDto>(`/project/${projectId}/available_data/get/`)
+    }
+
+    async getDomains(projectId: string) {
+        return instance.get(`/project/${projectId}/domains/get/`)
     }
 
     async uploadTestFile(data: UploadTestFileDto) {
 
         const formData = new FormData();
-        formData.append("projectID", data.projectID);
-        formData.append("file", data.file);
+        data.files.forEach(file => formData.append("files", file))
 
-        return instance.post<{date: {errorNodes: string}}>(`/project/testUpload`, formData)
+        return instance.post<{date: {errorNodes: string}}>(`/project/${data.projectID}/file/upload/`, formData, {
+            params: { category: data.category }
+        })
     }
     async login(data: LoginCredentials) {
-        return instance.post<TokensResponse>(`/user/login`, data)
+        return instance.post<TokensResponse>(`/user/login/`, data)
     }
 
     async refreshToken(refreshToken: string | null) {
-        return instance.post<TokensResponse>(`/user/refresh`, {refreshToken})
+        return instance.post<TokensResponse>(`/user/token_refresh/`, {refresh_token: refreshToken})
     }
 
 }
@@ -46,6 +58,9 @@ export const service = new Service();
 export const queryKeys = {
     projects: () => ["PROJECTS"],
     projectFiles: (projectId?: string) => ["PROJECT_FILES", projectId],
+    projectData: (projectId?: string) => ["PROJECT_DATA", projectId],
+    projectDomains: (projectId?: string) => ["PROJECT_DOMAINS", projectId],
+    projectCategories: (projectId?: string) => ["PROJECT_CATEGORIES", projectId],
     projectTests: (projectId?: string) => ["PROJECT_TESTS", projectId],
     projectNodes: (projectId?: string) => ["PROJECT_NODES", projectId],
     refreshToken: () => ["REFRESH_TOKEN"],
@@ -57,30 +72,43 @@ export type LoginCredentials = {
 }
 
 export type TokensResponse = {
-    token: string,
-    refreshToken: string
+    auth_token: string,
+    refresh_token: string
 }
 
 export type UploadTestFileDto = {
     projectID: string,
-    file: File
+    files: File[],
+    category: string
+}
+
+export type UserProjectsDto = {
+    owned_projects: ProjectDto[],
+    member_projects: ProjectDto[]
 }
 
 export type ProjectFileDto = {
-    name: string,
-    path: string,
-    type: string
+    file_id: string,
+    filename: string,
+    category: string
 }
 
 export type ProjectDto = {
-    createdAt: string,
-    id: string,
-    name: string,
-    updatedAt: string
+    project_id: string,
+    project_name: string,
+    project_owner: string,
+    project_members: string[],
 }
 
 export type CreateProjectDto = {
-    name: string
+    project_name: string
+}
+
+export type CategoryDto = {
+    name: string,
+    domain: string[],
+    description: string,
+    extensions_files: string[]
 }
 
 export type NodeDto = {
@@ -89,6 +117,20 @@ export type NodeDto = {
     domain: string,
     id: string,
     name: string
+}
+
+export type ProjectDataDto = {
+    nodes: {
+        type_node: {
+            id: string,
+            value: string
+        }[],
+        domain: string
+    }[],
+    primary: {
+      type_data: string[],
+      domain: string
+    }[]
 }
 
 export type TestDto = {

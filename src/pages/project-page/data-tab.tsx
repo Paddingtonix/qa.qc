@@ -1,8 +1,13 @@
 import {useState} from "react";
 import {MockDataData} from "./MOCK_DATA";
-import Tree from "../../components/base/tree/Tree";
+import Tree, {TreeItem} from "../../components/base/tree/Tree";
+import {ProjectDataDto} from "../../utils/api/service";
 
-const DataTab = () => {
+interface Props {
+    data?: ProjectDataDto
+}
+
+const DataTab = ({data}: Props) => {
 
     const [selectedNode, setSelectedNode] = useState<string | undefined>(undefined);
 
@@ -10,7 +15,7 @@ const DataTab = () => {
         <div className={"data-tab"}>
             <div className={"data-tab__tree"}>
                 <Tree
-                    items={MockDataData}
+                    items={data ? parseProjectDataToTreeData(data) : []}
                     onSelect={(value) => setSelectedNode(value)}
                 />
             </div>
@@ -28,6 +33,41 @@ const DataTab = () => {
     )
 };
 
-
+function parseProjectDataToTreeData(data: ProjectDataDto) {
+    const treeData: TreeItem[] = [];
+    treeData.push({
+        value: "Узлы данных",
+        label: "Узлы данных",
+        children: data.nodes.map(domain => {
+            return {
+                value: domain.domain,
+                label: `Домен "${domain.domain}"`,
+                children: domain.type_node.map(typeNode => {
+                    return {
+                        value: typeNode.id,
+                        label: typeNode.value
+                    }
+                })
+            }
+        })
+    })
+    treeData.push({
+        value: "Вспомогательные данные",
+        label: "Вспомогательные данные",
+        children: data.primary.map(domain => {
+            return {
+                value: domain.domain,
+                label: `Домен "${domain.domain}"`,
+                children: domain.type_data.map(typeData => {
+                    return {
+                        value: typeData,
+                        label: typeData
+                    }
+                })
+            }
+        })
+    })
+    return treeData;
+}
 
 export default DataTab;

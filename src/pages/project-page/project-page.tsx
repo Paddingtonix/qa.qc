@@ -33,12 +33,33 @@ export const ProjectPage = () => {
         enabled: !!projectId
     })
 
+    const {data: projectCategories, isLoading: loadingCategories} = useQuery({
+        queryKey: queryKeys.projectCategories(projectId),
+        queryFn: () => service.getProjectCategories(projectId || ""),
+        select: ({data}) => data.categories,
+        enabled: !!projectId
+    })
+
+    const {data: projectData} = useQuery({
+        queryKey: queryKeys.projectData(projectId),
+        queryFn: () => service.getProjectData(projectId || ""),
+        select: ({data}) => data,
+        enabled: !!projectId
+    })
+
+    // const {data: projectDomains} = useQuery({
+    //     queryKey: queryKeys.projectDomains(projectId),
+    //     queryFn: () => service.getDomains(projectId || ""),
+    //     select: ({data}) => data,
+    //     enabled: !!projectId
+    // })
+
     const currentTab = params.get("t") as ProjectTab || ProjectTab.Load;
 
     const ProjectTabContent: Record<ProjectTab, React.ReactNode> = {
-        [ProjectTab.Load]: <LoadProjectTab files={projectFiles}/>,
-        [ProjectTab.Files]: <FilesTab/>,
-        [ProjectTab.Data]: <DataTab/>,
+        [ProjectTab.Load]: <LoadProjectTab files={projectFiles} categories={projectCategories}/>,
+        [ProjectTab.Files]: <FilesTab files={projectFiles} categories={projectCategories}/>,
+        [ProjectTab.Data]: <DataTab data={projectData}/>,
     }
 
     return (
@@ -60,7 +81,7 @@ export const ProjectPage = () => {
                     </div>
                 </div>
                 <div className={"project-page__content"}>
-                    { isLoading ? <LoaderCmp/> : ProjectTabContent[currentTab] || "Раздел не найден" }
+                    { isLoading || loadingCategories ? <LoaderCmp/> : ProjectTabContent[currentTab] || "Раздел не найден" }
                 </div>
             </div>
         </PageLayoutCmp>

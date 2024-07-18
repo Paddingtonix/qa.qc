@@ -1,9 +1,15 @@
-import Tree from "../../components/base/tree/Tree";
+import Tree, {TreeItem} from "../../components/base/tree/Tree";
 import {useState} from "react";
 import {MockDataFiles, NODES_DATA} from "./MOCK_DATA";
 import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+import {CategoryDto, ProjectFileDto} from "../../utils/api/service";
 
-const FilesTab = () => {
+interface Props {
+    categories?: CategoryDto[],
+    files?: ProjectFileDto[]
+}
+
+const FilesTab = ({categories, files}: Props) => {
 
     const [selectedFile, setSelectedFile] = useState<string | undefined>(undefined);
 
@@ -11,8 +17,9 @@ const FilesTab = () => {
         <div className={"files-tab"}>
             <div className={"files-tab__tree"}>
                 <Tree
-                    items={MockDataFiles}
+                    items={(files && categories) ? parseProjectFilesToTreeData(files, categories) : []}
                     onSelect={(value) => setSelectedFile(value)}
+                    maxDepth={1}
                 />
             </div>
             <div>
@@ -108,6 +115,25 @@ const NodesTable = () => {
             </tbody>
         </table>
     )
+}
+
+function parseProjectFilesToTreeData(files: ProjectFileDto[], categories: CategoryDto[]) {
+    const treeData: TreeItem[] = [];
+    categories.forEach(category => {
+            treeData.push({
+                value: category.name,
+                label: `${category.name?.toUpperCase()}`,
+                children: files.filter(file => file.category === category.name)
+                    .map(file => {
+                        return {
+                            value: file.file_id,
+                            label: file.filename
+                        }
+                    })
+            })
+        }
+    )
+    return treeData;
 }
 
 export default FilesTab;

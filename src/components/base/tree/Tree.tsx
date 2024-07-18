@@ -3,6 +3,7 @@ import "./style.sass"
 
 interface TreeProps {
     items?: TreeItem[],
+    maxDepth?: number,
     onSelect?(value: string): void
 }
 
@@ -14,7 +15,7 @@ export interface TreeItem {
 
 const Tree = (props: TreeProps) => {
 
-    const {items, onSelect} = props;
+    const {items, maxDepth, onSelect} = props;
     const [selectedValue, setSelectedValue] = useState<undefined | string>(undefined);
 
     const selectValue = useCallback((value: string) => {
@@ -36,6 +37,8 @@ const Tree = (props: TreeProps) => {
                             {...item}
                             selectValue={selectValue}
                             isSelectedValue={isSelectedValue}
+                            depth={0}
+                            maxDepth={maxDepth}
                         />)
                 }
             </ul>
@@ -45,6 +48,8 @@ const Tree = (props: TreeProps) => {
 };
 
 interface TreeItemProps extends TreeItem {
+    depth: number,
+    maxDepth?: number,
     selectValue(value: string): void,
     isSelectedValue(value: string): boolean,
 }
@@ -55,12 +60,14 @@ const TreeItem = (props: TreeItemProps) => {
         value,
         label,
         children,
+        depth,
+        maxDepth,
         selectValue,
         isSelectedValue
     } = props;
 
     const onSelect = () => {
-        children?.length
+        ((maxDepth && depth < maxDepth) || children?.length)
             ? setOpen(!open)
             : selectValue(value)
     }
@@ -68,26 +75,27 @@ const TreeItem = (props: TreeItemProps) => {
     const [open, setOpen] = useState(false);
 
     return (
-        <li className={`tree-item ${open && "tree-item_open"} ${!children?.length && "tree-item_ended"} ${isSelectedValue(value) && "tree-item_selected"}`}>
+        <li className={`tree-item ${open && "tree-item_open"} ${!((maxDepth && depth < maxDepth) || children?.length) && "tree-item_ended"} ${isSelectedValue(value) && "tree-item_selected"}`}>
             <div onClick={onSelect}>
                 <span>{ label }</span>
                 {
-                    children?.length &&
+                    ((maxDepth && depth < maxDepth) || children?.length) ?
                         <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"/>
-                        </svg>
+                        </svg> : undefined
                 }
             </div>
             {
                 (children && open) &&
                 <ul>
-                    {children?.map(child =>
+                    {children.length ? children?.map(child =>
                         <TreeItem
                             key={child.value}
                             {...child}
                             selectValue={selectValue}
                             isSelectedValue={isSelectedValue}
-                        />)}
+                            depth={depth + 1}
+                        />) : "Нет данных"}
                 </ul>
             }
         </li>
