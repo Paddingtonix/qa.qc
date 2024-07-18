@@ -8,6 +8,7 @@ import {useNotification} from "../../components/base/notification/notification-p
 import {Link, useParams} from "react-router-dom";
 import {useQueryClient, useMutation} from "@tanstack/react-query";
 import HintIconCmp from "../../components/base/hint-icon-cmp/hint-icon-cmp";
+import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 
 interface LoadTabProps {
     files?: ProjectFileDto[],
@@ -22,7 +23,7 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined)
     const [loadedFiles, setLoadedFiles] = useState<FileWithPath[]>([])
 
-    const {mutate: uploadFile} = useMutation({
+    const {mutate: uploadFile,isPending} = useMutation({
         mutationFn: (data: UploadTestFileDto) => service.uploadTestFile(data),
         onSuccess: ({data}) => {
             queryClient.invalidateQueries({queryKey: queryKeys.projectFiles(projectId)})
@@ -73,33 +74,38 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
             </div>
             <div className={"load-tab__upload-container"}>
                 <h4>Загрузить данные</h4>
-                <DropdownCmp
-                    items={getCategoriesItems(categories || [])}
-                    defaultValue={selectedCategory}
-                    placeholder={"Выберете категорию"}
-                    onSelect={(key: string) => selectCategory(key)}
-                />
                 {
-                    selectedCategory ?
-                        <div {...getRootProps({className: 'dropzone'})} className='custom-dropzone'>
-                            <input {...getInputProps()} accept={categories?.find(category => category.name === selectedCategory)?.extensions_files.join(",")}/>
-                            <span>{`Выберите или перетащите файл с расширением ${categories?.find(category => category.name === selectedCategory)?.extensions_files.join(", ")} в поле`}</span>
-                        </div> : undefined
-                }
-                <div className='files-container'>
-                    {
-                        loadedFiles.map((file: FileWithPath, index) => (
-                            <FileCard name={file.path} size={file.size} key={index}/>
-                        ))
-                    }
-                </div>
-                {
-                    loadedFiles.length ?
+                    isPending ? <LoaderCmp/> :
                         <>
-                            <ButtonCmp onClick={onUpload}>Загрузить</ButtonCmp>
-                            <ButtonCmp onClick={() => setLoadedFiles([])} type={"secondary"}>Отмена</ButtonCmp>
+                            <DropdownCmp
+                                items={getCategoriesItems(categories || [])}
+                                defaultValue={selectedCategory}
+                                placeholder={"Выберете категорию"}
+                                onSelect={(key: string) => selectCategory(key)}
+                            />
+                            {
+                                selectedCategory ?
+                                    <div {...getRootProps({className: 'dropzone'})} className='custom-dropzone'>
+                                        <input {...getInputProps()} accept={categories?.find(category => category.name === selectedCategory)?.extensions_files.join(",")}/>
+                                        <span>{`Выберите или перетащите файл с расширением ${categories?.find(category => category.name === selectedCategory)?.extensions_files.join(", ")} в поле`}</span>
+                                    </div> : undefined
+                            }
+                            <div className='files-container'>
+                                {
+                                    loadedFiles.map((file: FileWithPath, index) => (
+                                        <FileCard name={file.path} size={file.size} key={index}/>
+                                    ))
+                                }
+                            </div>
+                            {
+                                loadedFiles.length ?
+                                    <>
+                                        <ButtonCmp onClick={onUpload}>Загрузить</ButtonCmp>
+                                        <ButtonCmp onClick={() => setLoadedFiles([])} type={"secondary"}>Отмена</ButtonCmp>
+                                    </>
+                                    : null
+                            }
                         </>
-                        : null
                 }
             </div>
         </div>
