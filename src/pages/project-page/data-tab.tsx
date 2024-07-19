@@ -1,7 +1,10 @@
 import {useState} from "react";
 import {MockDataData} from "./MOCK_DATA";
 import Tree, {TreeItem} from "../../components/base/tree/Tree";
-import {ProjectDataDto} from "../../utils/api/service";
+import {ProjectDataDto, queryKeys, service} from "../../utils/api/service";
+import {useQuery} from "@tanstack/react-query";
+import {useParams} from "react-router-dom";
+import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 
 interface Props {
     data?: ProjectDataDto
@@ -10,21 +13,52 @@ interface Props {
 const DataTab = ({data}: Props) => {
 
     const [selectedNode, setSelectedNode] = useState<string | undefined>(undefined);
+    const [selectedCategory, setSelectedCategory] = useState<"node" | "primary" | undefined>(undefined);
+    const {id: projectId} = useParams()
+
+    const {data: nodes, isLoading: loadingNode} = useQuery({
+        queryKey: queryKeys.projectNodes(projectId, selectedNode),
+        queryFn: () => service.getNodes(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode && selectedCategory === "node"
+    })
+
+    const {data: primary, isLoading: loadingPrimary} = useQuery({
+        queryKey: queryKeys.projectPrimary(projectId, selectedNode),
+        queryFn: () => service.getPrimary(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode && selectedCategory === "primary"
+    })
 
     return (
         <div className={"data-tab"}>
             <div className={"data-tab__tree"}>
                 <Tree
-                    items={data ? parseProjectDataToTreeData(data) : []}
-                    onSelect={(value) => setSelectedNode(value)}
+                    items={data ? parseNodeDataToTreeData(data) : []}
+                    onSelect={(value) => {
+                        setSelectedCategory("node")
+                        setSelectedNode(value)
+                    }}
+                    selectedValue={selectedNode}
+                />
+                <Tree
+                    items={data ? parsePrimaryDataToTreeData(data) : []}
+                    onSelect={(value) => {
+                        setSelectedCategory("primary")
+                        setSelectedNode(value)
+                    }}
+                    selectedValue={selectedNode}
                 />
             </div>
             <div className={"data-tab__info"}>
                 {
                     selectedNode ?
                         <>
-                            <h4>Информация о узле</h4>
-                            <p>Malesuada nunc vel risus commodo viverra maecenas accumsan. Turpis egestas integer eget aliquet nibh praesent tristique magna. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Volutpat consequat mauris nunc congue nisi vitae suscipit tellus mauris. Amet cursus sit amet dictum sit amet justo donec. Eleifend quam adipiscing vitae proin sagittis nisl.</p>
+                            <h4>Информация о {selectedCategory === "node" ? "узле" : "данных"}</h4>
+                            {
+                                (selectedCategory === "node" && loadingNode || selectedCategory === "primary" && loadingPrimary)
+                                    ? <LoaderCmp/> : <div><p>{JSON.stringify(selectedCategory === "node" ? nodes : primary)}</p></div>
+                            }
                         </>
                         : <h5>Выберете узел</h5>
                 }
@@ -33,7 +67,7 @@ const DataTab = ({data}: Props) => {
     )
 };
 
-function parseProjectDataToTreeData(data: ProjectDataDto) {
+function parseNodeDataToTreeData(data: ProjectDataDto) {
     const treeData: TreeItem[] = [];
     treeData.push({
         value: "Узлы данных",
@@ -51,9 +85,14 @@ function parseProjectDataToTreeData(data: ProjectDataDto) {
             }
         })
     })
+    return treeData;
+}
+
+function parsePrimaryDataToTreeData(data: ProjectDataDto) {
+    const treeData: TreeItem[] = [];
     treeData.push({
-        value: "Вспомогательные данные",
-        label: "Вспомогательные данные",
+        value: "Первичные данные",
+        label: "Первичные данные",
         children: data.primary.map(domain => {
             return {
                 value: domain.domain,

@@ -34,6 +34,18 @@ class Service {
         return instance.get(`/project/${projectId}/domains/get/`)
     }
 
+    async getNodes(projectId: string, typeNodeId: string) {
+        return instance.get(`/project/${projectId}/nodes/get/`, {
+            params: {type_node_id: typeNodeId}
+        })
+    }
+
+    async getPrimary(projectId: string, typeData: string) {
+        return instance.get(`/project/${projectId}/primary/get/`, {
+            params: {type_data: typeData}
+        })
+    }
+
     async uploadTestFile(data: UploadTestFileDto) {
 
         const formData = new FormData();
@@ -60,9 +72,10 @@ export const queryKeys = {
     projectFiles: (projectId?: string) => ["PROJECT_FILES", projectId],
     projectData: (projectId?: string) => ["PROJECT_DATA", projectId],
     projectDomains: (projectId?: string) => ["PROJECT_DOMAINS", projectId],
+    projectNodes: (projectId?: string, nodeId?: string) => ["PROJECT_NODES", projectId, nodeId],
+    projectPrimary: (projectId?: string, typeData?: string) => ["PROJECT_PRIMARY", projectId, typeData],
     projectCategories: (projectId?: string) => ["PROJECT_CATEGORIES", projectId],
     projectTests: (projectId?: string) => ["PROJECT_TESTS", projectId],
-    projectNodes: (projectId?: string) => ["PROJECT_NODES", projectId],
     refreshToken: () => ["REFRESH_TOKEN"],
 }
 

@@ -251,9 +251,15 @@
       font-size: toRem(24)
       color: $headers-color
 
-    p
-      font-size: toRem(18)
-      color: $text-color
+    > div
+      display: flex
+      flex: 1 1 0
+      max-width: 600px
+      overflow-x: auto
+
+      p
+        font-size: toRem(18)
+        color: $text-color
 
     h5
       text-align: center

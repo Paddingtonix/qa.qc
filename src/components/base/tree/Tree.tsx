@@ -1,9 +1,10 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import "./style.sass"
 
 interface TreeProps {
     items?: TreeItem[],
     maxDepth?: number,
+    selectedValue?: string,
     onSelect?(value: string): void
 }
 
@@ -15,8 +16,17 @@ export interface TreeItem {
 
 const Tree = (props: TreeProps) => {
 
-    const {items, maxDepth, onSelect} = props;
-    const [selectedValue, setSelectedValue] = useState<undefined | string>(undefined);
+    const {
+        items,
+        maxDepth,
+        selectedValue: initialSelectedValue,
+        onSelect
+    } = props;
+    const [selectedValue, setSelectedValue] = useState<undefined | string>(initialSelectedValue || undefined);
+
+    useEffect(() => {
+        setSelectedValue(initialSelectedValue)
+    }, [initialSelectedValue])
 
     const selectValue = useCallback((value: string) => {
         onSelect && onSelect(value !== selectedValue ? value : "");
@@ -26,6 +36,7 @@ const Tree = (props: TreeProps) => {
     const isSelectedValue = useCallback((value: string) => {
         return selectedValue === value
     }, [selectedValue])
+
 
     return (
         <div className={"tree-cmp"}>
