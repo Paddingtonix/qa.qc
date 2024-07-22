@@ -56,7 +56,7 @@ const DropdownCmp = (props: DropdownCmpProps) => {
                             key={item.key}
                             onClick={() => onChangeValue(item.key)}
                         >
-                            {getSelectedItem()?.prefix ? getSelectedItem()?.prefix : undefined}
+                            {item.prefix ? item.prefix : undefined}
                             <span>{item.title}</span>
                         </span>) : <div className={"dropdown__items_empty"}>Нет данных</div>
                 }
