@@ -8,13 +8,20 @@
     background-color: $background-color
     border-radius: toRem(8)
     display: flex
+    gap: toRem(5)
     position: relative
     justify-content: space-between
     align-items: center
     cursor: pointer
     padding: toRem(15) toRem(20)
-    color: $headers-color
-    text-transform: uppercase
+
+    > span
+      flex: 1 1 0
+      color: $headers-color
+      text-transform: uppercase
+      text-overflow: ellipsis
+      overflow: hidden
+      white-space: nowrap
 
     &:hover
       .arrow
@@ -45,19 +52,27 @@
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3)
 
       .item
-        font-size: toRem(16)
+        display: flex
+        gap: toRem(5)
+        align-items: center
         border-radius: toRem(8)
         cursor: pointer
         transition: .3s
         padding: toRem(15)
-        color: $headers-color
-        text-transform: uppercase
 
         &:hover
           background-color: $background-color
 
         &_selected
           background-color: $background-color
+
+        > span
+          font-size: toRem(16)
+          color: $headers-color
+          text-transform: uppercase
+          text-overflow: ellipsis
+          overflow: hidden
+          white-space: nowrap
 
     &_empty
       background-color: $dark-background-color

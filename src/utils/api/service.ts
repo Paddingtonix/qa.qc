@@ -35,13 +35,13 @@ class Service {
     }
 
     async getNodes(projectId: string, typeNodeId: string) {
-        return instance.get(`/project/${projectId}/nodes/get/`, {
+        return instance.get<any[]>(`/project/${projectId}/nodes/get/`, {
             params: {type_node_id: typeNodeId}
         })
     }
 
     async getPrimary(projectId: string, typeData: string) {
-        return instance.get(`/project/${projectId}/primary/get/`, {
+        return instance.get<any[]>(`/project/${projectId}/primary/get/`, {
             params: {type_data: typeData}
         })
     }

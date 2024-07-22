@@ -78,7 +78,7 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
                             <DropdownCmp
                                 items={getCategoriesItems(categories || [])}
                                 defaultValue={selectedCategory}
-                                placeholder={"Выберете категорию"}
+                                placeholder={"Выберите категорию"}
                                 onSelect={(key: string) => selectCategory(key)}
                             />
                             {
@@ -131,10 +131,8 @@ const CategoryFiles = ({name, files}: CategoryFilesProps) => {
                         </svg>
                         {files?.length || 0}
                     </div>
-                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"
-                            fill="#ffffff"/>
+                     <svg width="14" height="14" className={"arrow"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"/>
                     </svg>
                 </div>
 
@@ -187,7 +185,8 @@ function getExtension(file_name: string | undefined) {
 function getCategoriesItems(categories: CategoryDto[]) {
     return categories.map(category => {return {
         key: category.name,
-        title: <span className={"category-title"}>{category.name}<HintIconCmp text={category.description}/></span>
+        title: category.name + "dddddddd",
+        prefix: <HintIconCmp text={category.description}/>
     }})
 }
 

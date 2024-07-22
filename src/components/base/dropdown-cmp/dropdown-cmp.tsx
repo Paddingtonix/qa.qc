@@ -3,9 +3,9 @@ import {ReactNode, useState} from "react";
 import {useOutsideClick} from "../../../utils/hooks/use-outside-click";
 
 interface DropdownCmpProps {
-    items?: { key: string, title: ReactNode }[],
+    items?: { key: string, title: ReactNode, prefix?: ReactNode}[],
     defaultValue?: string,
-    placeholder?: string
+    placeholder?: string,
 
     onSelect?(key: string): void
 }
@@ -39,8 +39,9 @@ const DropdownCmp = (props: DropdownCmpProps) => {
     return (
         <div className='dropdown' ref={ref}>
             <div className={`dropdown__input ${!getSelectedItem() && "dropdown__input_empty"}`} onClick={() => setOpen(!open)}>
-                {getSelectedItem()?.title || placeholder || "Выберите значение"}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                {getSelectedItem()?.prefix ? getSelectedItem()?.prefix : undefined}
+                <span>{getSelectedItem()?.title || placeholder || "Выберите значение"}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                      className={`arrow ${open && 'arrow_up'}`}>
                     <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"/>
                 </svg>
@@ -55,7 +56,8 @@ const DropdownCmp = (props: DropdownCmpProps) => {
                             key={item.key}
                             onClick={() => onChangeValue(item.key)}
                         >
-                            {item.title}
+                            {getSelectedItem()?.prefix ? getSelectedItem()?.prefix : undefined}
+                            <span>{item.title}</span>
                         </span>) : <div className={"dropdown__items_empty"}>Нет данных</div>
                 }
             </div>

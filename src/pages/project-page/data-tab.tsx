@@ -59,16 +59,38 @@ const DataTab = ({data}: Props) => {
                         <>
                             <h4>Информация о {selectedCategory === "node" ? "узле" : "данных"}</h4>
                             {
-                                (selectedCategory === "node" && loadingNode || selectedCategory === "primary" && loadingPrimary)
-                                    ? <LoaderCmp/> : <div><p>{JSON.stringify(selectedCategory === "node" ? nodes : primary)}</p></div>
+                                ((selectedCategory === "node" && loadingNode) || (selectedCategory === "primary" && loadingPrimary))
+                                    ? <LoaderCmp/> : selectedCategory === "node"
+                                        ? <NodeData data={nodes}/>
+                                        : <PrimaryData data={primary}/>
                             }
                         </>
-                        : <h5>Выберете узел</h5>
+                        : <h5>Выберите узел</h5>
                 }
             </div>
         </div>
     )
 };
+
+interface NodeDataProps {
+    data?: any[]
+}
+
+const NodeData = ({data}: NodeDataProps)  => {
+    return (
+        <div><p>{JSON.stringify(data)}</p></div>
+    )
+}
+
+interface PrimaryDataProps {
+    data?: any[]
+}
+
+const PrimaryData = ({data}: PrimaryDataProps)  => {
+    return (
+        <div><p>{JSON.stringify(data)}</p></div>
+    )
+}
 
 function parseNodeDataToTreeData(data: ProjectDataDto) {
     const treeData: TreeItem[] = [];

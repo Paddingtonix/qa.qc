@@ -59,6 +59,9 @@
   &__categories-container
     background-color: $dark-background-color
     padding: toRem(20)
+    display: flex
+    flex-direction: column
+    gap: toRem(10)
     flex: 1 1 0
 
     &__empty
@@ -74,8 +77,8 @@
         color: $primary-color
 
         .category-files__dropdown
-          > svg
-            rotate: 180deg
+          > .arrow
+            transform: rotateX(180deg)
 
       &__list
         display: none
@@ -92,6 +95,7 @@
 
       > span
         text-transform: uppercase
+        font-size: toRem(20)
         cursor: pointer
         display: flex
         justify-content: space-between
@@ -109,6 +113,10 @@
             align-items: center
             gap: toRem(3)
             color: $text-color
+
+          > .arrow
+            fill: $text-color
+            transition: .3s
 
   &__upload-container
     position: sticky
@@ -156,9 +164,14 @@
 
   .category-title
     display: flex
-    justify-content: space-between
+    justify-content: start
     gap: toRem(10)
     align-items: center
+
+    > span
+      text-overflow: ellipsis
+      overflow: hidden
+      white-space: nowrap
 
   .file-card
     display: flex
