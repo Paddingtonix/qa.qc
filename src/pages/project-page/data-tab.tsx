@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {MockDataData} from "./MOCK_DATA";
-import Tree, {TreeItem} from "../../components/base/tree/Tree";
+import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
 import {ProjectDataDto, queryKeys, service} from "../../utils/api/service";
 import {useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
@@ -30,10 +30,13 @@ const DataTab = ({data}: Props) => {
         enabled: !!projectId && !!selectedNode && selectedCategory === "primary"
     })
 
+    console.log("Узлы", nodes)
+    console.log("Первичные данные", primary)
+
     return (
         <div className={"data-tab"}>
             <div className={"data-tab__tree"}>
-                <Tree
+                <TreeCmp
                     items={data ? parseNodeDataToTreeData(data) : []}
                     onSelect={(value) => {
                         setSelectedCategory("node")
@@ -41,7 +44,7 @@ const DataTab = ({data}: Props) => {
                     }}
                     selectedValue={selectedNode}
                 />
-                <Tree
+                <TreeCmp
                     items={data ? parsePrimaryDataToTreeData(data) : []}
                     onSelect={(value) => {
                         setSelectedCategory("primary")

@@ -2,14 +2,28 @@ import "./style.sass"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {CreateProjectDto, queryKeys, service} from "../../utils/api/service";
 import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
-import {generatePath, Link} from "react-router-dom";
+import {generatePath, Link, useSearchParams} from "react-router-dom";
 import {RouterLinks} from "../../App";
 import {useNotification} from "../../components/base/notification/notification-provider";
-import {useState} from "react";
+import React, {useState} from "react";
 import TooltipCmp from "../../components/base/tooltip-cmp/tooltip-cmp";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
+import TabsCmp, {TabItem} from "../../components/base/tabs-cmp/tabs-cmp";
+import BadgeCmp from "../../components/base/badge/badge-cmp";
+
+enum ProjectAffiliation {
+    Owned = "owned",
+    Member = "member",
+}
+
+const ProjectAffiliationTabItems: TabItem[] = [
+    { key: ProjectAffiliation.Owned, title: "Созданные мной" },
+    { key: ProjectAffiliation.Member, title: "Принимаю участие" },
+]
 
 const ProjectsPage = () => {
+
+    const [params, setParams] = useSearchParams()
 
     const {data: projects, isLoading} = useQuery({
         queryKey: queryKeys.projects(),
@@ -17,36 +31,85 @@ const ProjectsPage = () => {
         select: ({data}) => data
     })
 
+    const currentTab = params.get("t") as ProjectAffiliation || ProjectAffiliation.Owned;
+
+    const getProjects = () => {
+        if (projects)
+            return currentTab === ProjectAffiliation.Owned ? projects.owned_projects : projects.member_projects
+        return [];
+    }
+
     return (
         <PageLayoutCmp>
             <div className={"projects-page"}>
                 <div>
                     <h2>Проекты</h2>
                     <div>
-                        <CreateProjectButton/>
+                        <TabsCmp
+                            items={ProjectAffiliationTabItems}
+                            selectedTab={currentTab}
+                            onSelect={(key) => setParams({t: key})}
+                        />
+                        { currentTab === ProjectAffiliation.Owned ? <CreateProjectButton/> : undefined }
                     </div>
                     <div className={"projects-page__projects-list"}>
                         {isLoading ? <LoaderCmp/> :
-                            projects?.owned_projects.map(project =>
-                                <Link to={generatePath(RouterLinks.Project, {id: project.project_id})}
-                                      className={"project-card"} key={project.project_id}>
-                                    <span>{project.project_name}</span>
-                                    <TooltipCmp text={"Удалить"} direction={"top"}>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                             className={"project-card__delete-button"}
-                                        >
-                                            <path
-                                                d="M17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41L17.59 5Z"/>
-                                        </svg>
-                                    </TooltipCmp>
-                                </Link>
-                            )
-                        }
+                            getProjects().length ? getProjects().map(project =>
+                                <ProjectItem
+                                    id={project.project_id}
+                                    affiliation={currentTab}
+                                    name={project.project_name}
+                                    members={project.project_members}
+                                    owner={project.project_owner}
+                                    key={project.project_id}
+                                />
+                            ) : "Список проектов пуст"}
                     </div>
                 </div>
             </div>
         </PageLayoutCmp>
 
+    )
+}
+
+interface ProjectItemProps {
+    id: string,
+    name: string,
+    affiliation: ProjectAffiliation,
+    owner: string,
+    members: string[]
+}
+
+const ProjectItem = ({id, name, affiliation, members, owner}: ProjectItemProps) => {
+
+    return (
+        <Link to={generatePath(RouterLinks.Project, {id})} className={"project-card"}>
+            <div>
+                <span>{name}</span>
+                <div className={"project-card__members"}>
+                    <span>Участники:</span>
+                    <div>
+                        {
+                            members.map(member =>
+                                <BadgeCmp
+                                    key={member}
+                                    type={member === owner ? "primary" : "default"}
+                                >{member}</BadgeCmp>)
+                        }
+                    </div>
+                </div>
+            </div>
+            {
+                affiliation === ProjectAffiliation.Owned ?
+                    <TooltipCmp text={"Удалить"} direction={"top"}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                             className={"project-card__delete-button"}
+                        >
+                            <path d="M17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41L17.59 5Z"/>
+                        </svg>
+                    </TooltipCmp> : undefined
+            }
+        </Link>
     )
 }
 

@@ -3,7 +3,7 @@ import {instance} from "./api";
 class Service {
 
     async getProjects() {
-        return instance.get<UserProjectsDto>(`/project/get/`)
+        return instance.get<UserProjectsDto>(`/project/get`)
     }
 
     async getProjectCategories(projectId: string) {

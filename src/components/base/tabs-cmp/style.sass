@@ -1,0 +1,23 @@
+@use "./../../../assets/style/params.sass" as *
+
+.tabs-cmp
+  display: flex
+  flex-wrap: wrap
+  gap: toRem(5)
+  padding: toRem(10) 0 0 0
+  border-bottom: 1px solid #3a3a3a
+
+  .tabs__item
+    border-bottom: 1px solid transparent
+    padding: toRem(15) toRem(20)
+    background-color: transparent
+    cursor: pointer
+    color: $headers-color
+    transition: .3s
+
+    &:hover
+      border-color: $primary-color
+      background-color: $primary-ghost-color
+
+    &_selected
+      border-color: $primary-color

@@ -35,8 +35,6 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
         }
     });
 
-    console.log(categories?.find(category => category.name === selectedCategory)?.extensions_files)
-
     const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
         // accept: {
         //     'application/': categories?.find(category => category.name === selectedCategory)?.extensions_files || []

@@ -14,7 +14,7 @@ export interface TreeItem {
     children?: TreeItem[]
 }
 
-const Tree = (props: TreeProps) => {
+const TreeCmp = (props: TreeProps) => {
 
     const {
         items,
@@ -113,4 +113,4 @@ const TreeItem = (props: TreeItemProps) => {
     )
 }
 
-export default Tree;
+export default TreeCmp;

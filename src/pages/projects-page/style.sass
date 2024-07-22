@@ -15,9 +15,11 @@
       font-size: toRem(28)
       text-transform: uppercase
 
-    div:nth-child(2)
+    > div:nth-child(2)
+      margin-top: toRem(10)
       display: flex
-      justify-content: end
+      justify-content: space-between
+      align-items: center
 
   &__projects-list
     display: flex
@@ -28,24 +30,46 @@
   .project-card
     display: flex
     justify-content: space-between
-    align-items: center
+    align-items: start
     background-color: $dark-background-color
-    color: $headers-color
     text-decoration: none
-    text-transform: uppercase
+
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
     padding: toRem(25)
-    transition: .3s
 
     &:hover
-      color: $primary-color
+
+      > div > span
+        color: $primary-color
 
       .project-card__delete-button
         transition: .3s
         opacity: 1
 
-    > span
-      font-size: toRem(20)
+    > div
+      display: flex
+      flex-direction: column
+      gap: toRem(30)
+
+      > span
+        font-size: toRem(20)
+        color: $headers-color
+        text-transform: uppercase
+        transition: .3s
+
+    &__members
+      display: flex
+      align-items: center
+      gap: toRem(10)
+
+      > span
+        color: $text-color
+
+      > div
+        display: flex
+        flex-wrap: wrap
+        gap: toRem(5)
+
 
     &__delete-button
       transition: 0s

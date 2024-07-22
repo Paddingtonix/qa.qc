@@ -1,4 +1,4 @@
-import Tree, {TreeItem} from "../../components/base/tree/Tree";
+import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
 import {useState} from "react";
 import {MockDataFiles, NODES_DATA} from "./MOCK_DATA";
 import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
@@ -16,7 +16,7 @@ const FilesTab = ({categories, files}: Props) => {
     return (
         <div className={"files-tab"}>
             <div className={"files-tab__tree"}>
-                <Tree
+                <TreeCmp
                     items={(files && categories) ? parseProjectFilesToTreeData(files, categories) : []}
                     onSelect={(value) => setSelectedFile(value)}
                     maxDepth={1}
