@@ -3,6 +3,7 @@ import "./style.sass"
 import {createPortal} from "react-dom";
 import LoginModalCmp from "./login-cmp/login-modal-cmp";
 import RememberPasswordModalCmp from "./remember-password-cmp/remember-password-modal-cmp";
+import RegisterModalCmp from "./register-cmp/register-modal-cmp";
 
 interface ModalProps {
     className?: string;
@@ -18,7 +19,7 @@ export interface ModalContentProps {
     changeModalContent(content: ModalContent): void
 }
 
-type ModalContent = "loginForm" | "rememberPassword" | "custom";
+type ModalContent = "loginForm" | "rememberPassword" | "register" | "custom";
 
 const ANIMATION_DELAY = 300;
 
@@ -92,6 +93,7 @@ const ModalCmp = (props: ModalProps) => {
     const ModalContentComponents: Record<ModalContent, React.ReactNode> = {
         "loginForm": <LoginModalCmp changeModalContent={changeModalContent}/>,
         "rememberPassword": <RememberPasswordModalCmp changeModalContent={changeModalContent}/>,
+        "register": <RegisterModalCmp changeModalContent={changeModalContent}/>,
         "custom": children
     }
 

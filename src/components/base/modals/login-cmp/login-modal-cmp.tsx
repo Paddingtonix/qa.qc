@@ -57,6 +57,9 @@ const LoginModalCmp = (props: ModalContentProps) => {
             </span>
             <ButtonCmp disabled={isPending}>Войти</ButtonCmp>
             <div className={"login-modal__forgot-password"}>
+                <span onClick={() => changeModalContent("register")}>
+                    Регистрация
+                </span>
                 <span onClick={() => changeModalContent("rememberPassword")}>
                     Забыли пароль?
                 </span>

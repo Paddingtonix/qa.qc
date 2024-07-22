@@ -59,6 +59,10 @@ class Service {
         return instance.post<TokensResponse>(`/user/login/`, data)
     }
 
+    async register(data: RegisterCredentials) {
+        return instance.post<TokensResponse>(`/user/register/`, data)
+    }
+
     async refreshToken(refreshToken: string | null) {
         return instance.post<TokensResponse>(`/user/token_refresh/`, {refresh_token: refreshToken})
     }
@@ -80,6 +84,12 @@ export const queryKeys = {
 }
 
 export type LoginCredentials = {
+    email: string,
+    password: string
+}
+
+export type RegisterCredentials = {
+    name: string,
     email: string,
     password: string
 }

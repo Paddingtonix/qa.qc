@@ -16,8 +16,7 @@ const AccountCmp = () => {
             <div className={`personal-account-dropdown__panel ${isOpen && "personal-account-dropdown__panel_open"}`}
                  onClick={() => setIsOpen(!isOpen)}
             >
-                <img alt={""}
-                     src={"https://ih1.redbubble.net/image.580238014.1198/st,small,507x507-pad,600x600,f8f8f8.u4.jpg"}/>
+                <span>user_name</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"
                           fill="#2E3A59"/>
