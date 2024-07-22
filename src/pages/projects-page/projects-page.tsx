@@ -91,10 +91,11 @@ const ProjectItem = ({id, name, affiliation, members, owner}: ProjectItemProps) 
                     <div>
                         {
                             members.map(member =>
-                                <BadgeCmp
-                                    key={member}
-                                    type={member === owner ? "primary" : "default"}
-                                >{member}</BadgeCmp>)
+                                member === owner ?
+                                    <TooltipCmp direction={"top"} text={"Владелец проекта"}>
+                                        <BadgeCmp key={member} type={"primary"}>{member}</BadgeCmp>
+                                    </TooltipCmp>
+                                 : <BadgeCmp key={member} type={"default"}>{member}</BadgeCmp>)
                         }
                     </div>
                 </div>
