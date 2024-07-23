@@ -18,6 +18,12 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 
     useRefreshToken(isAuth);
 
+    const {data: userProfile} = useQuery({
+        queryKey: queryKeys.userProfile(),
+        queryFn: () => service.getProfile(),
+        select: ({data}) => data
+    })
+
     const signIn = (accessToken: string, refreshToken: string, rememberMe: boolean) => {
         setAccessToken(accessToken);
         if (rememberMe) setRefreshToken(refreshToken);
@@ -45,6 +51,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 
     const value: AuthContextValue = {
         isAuth,
+        userId: userProfile?.id || "",
         signIn,
         signOut,
     }
@@ -58,12 +65,14 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 
 interface AuthContextValue {
     isAuth: boolean;
+    userId: string;
     signIn(accessToken: string, refreshToken: string, rememberMe: boolean): void;
     signOut(): void;
 }
 
 const AuthContext = createContext<AuthContextValue>({
     isAuth: false,
+    userId: "",
     signIn(_accessToken: string, _refreshToken: string, _rememberMe: boolean) {},
     signOut() {}
 });

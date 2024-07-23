@@ -46,16 +46,73 @@
         transition: .3s
         opacity: 1
 
+      .project-card__add-member-btn
+        transition: .3s
+        opacity: 1
+
     > div
       display: flex
       flex-direction: column
       gap: toRem(30)
 
-      > span
+    &__add-member-btn
+      position: relative
+      opacity: 0
+
+      > div
+        width: max-content
+        position: absolute
+        right: 0
+        left: 0
+        z-index: 100
+
+        background-color: $dark-background-color
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3)
+        border-radius: toRem(8)
+        padding: toRem(16) toRem(16) 0 toRem(16)
+
+        input
+          border-bottom: 1px $text-color solid
+
+        ul
+          list-style-type: none
+          padding: 0
+
+          li
+            display: flex
+            justify-content: space-between
+            align-items: center
+            gap: toRem(5)
+
+            > div
+              display: flex
+              flex-direction: column
+              margin-bottom: toRem(5)
+
+              span:first-child
+                color: $headers-color
+
+              span:last-child
+                color: $text-color
+                font-size: toRem(14)
+
+            > span
+              height: min-content
+
+
+    &__edit-project-name
+      h6
+        font-size: toRem(20)
+        color: $headers-color
+        font-weight: normal
+        text-transform: uppercase
+        transition: .3s
+
+      input
         font-size: toRem(20)
         color: $headers-color
         text-transform: uppercase
-        transition: .3s
+        border-bottom: 1px $text-color solid
 
     &__members
       display: flex
@@ -69,6 +126,21 @@
         display: flex
         flex-wrap: wrap
         gap: toRem(5)
+
+        > span
+          height: 100%
+
+    &__member
+      gap: toRem(5)
+
+      &:hover
+        svg
+          display: block
+
+      svg
+        display: none
+        fill: $text-color
+
 
 
     &__delete-button

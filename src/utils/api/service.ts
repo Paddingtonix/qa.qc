@@ -26,6 +26,21 @@ class Service {
         return instance.post(`/project/create_project/`, data)
     }
 
+    async deleteProject(projectId: string) {
+        return instance.delete(`/project/${projectId}/delete/`)
+    }
+
+    async addProjectMember(projectId: string, userId: string) {
+        return instance.post(`/project/${projectId}/member/add/`, {user_id: userId})
+    }
+
+    async removeProjectMember(projectId: string, userId: string) {
+        return instance.delete(`/project/${projectId}/member/remove/`)
+    }
+    async editProjectName(id: string, data: EditProjectNameDto) {
+        return instance.put(`/project/${id}/edit/`, data)
+    }
+
     async getProjectData(projectId: string) {
         return instance.get<ProjectDataDto>(`/project/${projectId}/available_data/get/`)
     }
@@ -55,6 +70,11 @@ class Service {
             params: { category: data.category }
         })
     }
+
+    async getProfile(){
+        return instance.get<UserDto>(`/user/me/`)
+    }
+
     async login(data: LoginCredentials) {
         return instance.post<TokensResponse>(`/user/login/`, data)
     }
@@ -72,6 +92,7 @@ class Service {
 export const service = new Service();
 
 export const queryKeys = {
+    userProfile: () => ["USER_PROFILE"],
     projects: () => ["PROJECTS"],
     projectFiles: (projectId?: string) => ["PROJECT_FILES", projectId],
     projectData: (projectId?: string) => ["PROJECT_DATA", projectId],
@@ -99,6 +120,10 @@ export type TokensResponse = {
     refresh_token: string
 }
 
+export type EditProjectNameDto = {
+    new_project_name?: string
+}
+
 export type UploadTestFileDto = {
     projectID: string,
     files: File[],
@@ -119,8 +144,19 @@ export type ProjectFileDto = {
 export type ProjectDto = {
     project_id: string,
     project_name: string,
-    project_owner: string,
-    project_members: string[],
+    project_owner: MemberDto,
+    project_members: MemberDto[],
+}
+
+export type MemberDto = {
+    id: string,
+    name: string
+}
+
+export type UserDto = {
+    id: string,
+    name: string,
+    email: string
 }
 
 export type CreateProjectDto = {

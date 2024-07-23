@@ -1,15 +1,20 @@
 import "./style.sass"
-import {ReactNode} from "react";
+import React, {ReactNode} from "react";
 
 interface Props {
     children?: ReactNode,
-    type?: "primary" | "default"
+    type?: "primary" | "default" | "ghost",
+    className?: string,
+    onClick?(e: React.MouseEvent<HTMLSpanElement, MouseEvent>): void
 }
 
 
-const BadgeCmp = ({children, type = "default"}: Props) => {
+const BadgeCmp = ({children, type = "default", className, onClick}: Props) => {
     return (
-        <span className={`badge-cmp badge-cmp_${type}`}>{children}</span>
+        <span
+            className={`badge-cmp badge-cmp_${type} ${className}`}
+            onClick={(event) => onClick && onClick(event)}
+        >{children}</span>
     )
 }
 

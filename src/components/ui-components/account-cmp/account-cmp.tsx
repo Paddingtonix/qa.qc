@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import "./style.sass"
 import {useAuth} from "../../../utils/providers/AuthProvider";
 import {useOutsideClick} from "../../../utils/hooks/use-outside-click";
+import {queryKeys, service} from "../../../utils/api/service";
+import {useQuery} from "@tanstack/react-query";
 
 const AccountCmp = () => {
 
@@ -11,12 +13,18 @@ const AccountCmp = () => {
         setIsOpen(false);
     });
 
+    const {data: userProfile} = useQuery({
+        queryKey: queryKeys.userProfile(),
+        queryFn: () => service.getProfile(),
+        select: ({data}) => data
+    })
+
     return (
         <div className={"personal-account-dropdown"} ref={ref}>
             <div className={`personal-account-dropdown__panel ${isOpen && "personal-account-dropdown__panel_open"}`}
                  onClick={() => setIsOpen(!isOpen)}
             >
-                <span>user_name</span>
+                <span>{userProfile?.name}</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"/>
                 </svg>
