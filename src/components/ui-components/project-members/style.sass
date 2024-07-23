@@ -1,0 +1,90 @@
+@use "./../../../assets/style/params.sass" as *
+
+.project-members
+  display: flex
+  gap: toRem(10)
+  align-items: center
+
+  > span
+    color: $text-color
+
+  &__list
+    display: flex
+    align-items: center
+    gap: toRem(5)
+
+    > span
+      color: $text-color
+
+    > div
+      display: flex
+      flex-wrap: wrap
+      gap: toRem(5)
+
+      > span
+        height: 100%
+
+  &__unit
+    gap: toRem(5)
+
+    &:hover
+      svg
+        display: block
+
+    svg
+      display: none
+      fill: $text-color
+      cursor: pointer
+
+
+  &__add-member-btn
+    position: relative
+
+    > span
+      cursor: pointer
+
+    > div
+      width: max-content
+      position: absolute
+      display: flex
+      flex-direction: column
+      gap: toRem(10)
+      right: 0
+      left: 0
+      top: toRem(40)
+      z-index: 100
+
+      background-color: $dark-background-color
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3)
+      border-radius: toRem(8)
+      padding: toRem(16) toRem(16) 0 toRem(16)
+
+      input
+        border-bottom: 1px $text-color solid
+
+      ul
+        list-style-type: none
+        padding: 0
+        margin: 0
+
+        li
+          display: flex
+          justify-content: space-between
+          align-items: center
+          gap: toRem(5)
+
+          > div
+            display: flex
+            flex-direction: column
+            margin-bottom: toRem(5)
+
+            span:first-child
+              color: $headers-color
+
+            span:last-child
+              color: $text-color
+              font-size: toRem(14)
+
+          > span
+            height: min-content
+            cursor: pointer

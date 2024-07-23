@@ -1,8 +1,12 @@
 import "./style.sass"
 
-const LoaderCmp = () => {
+interface Props {
+    size?: "small" | "large"
+}
+
+const LoaderCmp = ({size = "large"}: Props) => {
     return (
-        <span className="loader-cmp"/>
+        <span className={`loader-cmp loader-cmp_${size}`}/>
     )
 }
 

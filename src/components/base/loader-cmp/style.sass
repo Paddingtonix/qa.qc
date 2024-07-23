@@ -1,14 +1,23 @@
 @use "./../../../assets/style/params.sass" as *
 
 .loader-cmp
-  width: 48px
-  height: 48px
+
   border: 5px solid #FFF
   border-bottom-color: transparent
   border-radius: 50%
   display: inline-block
   box-sizing: border-box
   animation: rotation 1s linear infinite
+
+  &_large
+    width: 48px
+    height: 48px
+    border-width: 5px
+
+  &_small
+    width: 24px
+    height: 24px
+    border-width: 2px
 
 
 @keyframes rotation

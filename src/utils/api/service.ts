@@ -6,6 +6,10 @@ class Service {
         return instance.get<UserProjectsDto>(`/project/get`)
     }
 
+    async getProject(projectId: string) {
+        return instance.get<ProjectDto>(`/project/${projectId}/get`)
+    }
+
     async getProjectCategories(projectId: string) {
         return instance.get<{categories: CategoryDto[]}>(`/project/${projectId}/categories/get/`)
     }
@@ -31,11 +35,15 @@ class Service {
     }
 
     async addProjectMember(projectId: string, userId: string) {
-        return instance.post(`/project/${projectId}/member/add/`, {user_id: userId})
+        return instance.post(`/project/${projectId}/member/add/`, {},{
+            params: {user_data: userId}
+        })
     }
 
     async removeProjectMember(projectId: string, userId: string) {
-        return instance.delete(`/project/${projectId}/member/remove/`)
+        return instance.delete(`/project/${projectId}/member/remove/`, {
+            params: {user_data: userId}
+        })
     }
     async editProjectName(id: string, data: EditProjectNameDto) {
         return instance.put(`/project/${id}/edit/`, data)
@@ -75,6 +83,10 @@ class Service {
         return instance.get<UserDto>(`/user/me/`)
     }
 
+    async getUsers(params?: GetUsersParams){
+        return instance.get<UserListDto>(`/user/get/all`, { params })
+    }
+
     async login(data: LoginCredentials) {
         return instance.post<TokensResponse>(`/user/login/`, data)
     }
@@ -93,7 +105,9 @@ export const service = new Service();
 
 export const queryKeys = {
     userProfile: () => ["USER_PROFILE"],
+    users: (params?: GetUsersParams) => ["USERS", params],
     projects: () => ["PROJECTS"],
+    project: (projectId?: string) => ["PROJECT", projectId],
     projectFiles: (projectId?: string) => ["PROJECT_FILES", projectId],
     projectData: (projectId?: string) => ["PROJECT_DATA", projectId],
     projectDomains: (projectId?: string) => ["PROJECT_DOMAINS", projectId],
@@ -101,7 +115,21 @@ export const queryKeys = {
     projectPrimary: (projectId?: string, typeData?: string) => ["PROJECT_PRIMARY", projectId, typeData],
     projectCategories: (projectId?: string) => ["PROJECT_CATEGORIES", projectId],
     projectTests: (projectId?: string) => ["PROJECT_TESTS", projectId],
-    refreshToken: () => ["REFRESH_TOKEN"],
+    refreshToken: () => ["REFRESH_TOKEN"]
+}
+
+export type GetUsersParams = {
+    skip?: number,
+    limit?: number,
+    name?: string,
+    email?: string
+}
+
+export type UserListDto = {
+    users: UserDto[],
+    total: number,
+    skip: number,
+    limit: number
 }
 
 export type LoginCredentials = {

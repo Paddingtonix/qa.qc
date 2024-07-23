@@ -1,6 +1,6 @@
 import "./style.sass"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {CreateProjectDto, EditProjectNameDto, MemberDto, queryKeys, service} from "../../utils/api/service";
+import {CreateProjectDto, MemberDto, queryKeys, service} from "../../utils/api/service";
 import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
 import {generatePath, Link, useSearchParams} from "react-router-dom";
 import {RouterLinks} from "../../App";
@@ -9,10 +9,8 @@ import React, {useState} from "react";
 import TooltipCmp from "../../components/base/tooltip-cmp/tooltip-cmp";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 import TabsCmp, {TabItem} from "../../components/base/tabs-cmp/tabs-cmp";
-import BadgeCmp from "../../components/base/badge/badge-cmp";
 import {useAuth} from "../../utils/providers/AuthProvider";
-import {useOutsideClick} from "../../utils/hooks/use-outside-click";
-import {AxiosError} from "axios";
+import ProjectMembersCmp from "../../components/ui-components/project-members/ProjectMembersCmp";
 
 enum ProjectAffiliation {
     Owned = "owned",
@@ -46,14 +44,16 @@ const ProjectsPage = () => {
         <PageLayoutCmp>
             <div className={"projects-page"}>
                 <div>
-                    <h2>Проекты</h2>
-                    <div>
+                    <div className={"projects-page__header"}>
+                        <div>
+                            <h2>Проекты</h2>
+                            { currentTab === ProjectAffiliation.Owned ? <CreateProjectButton/> : undefined }
+                        </div>
                         <TabsCmp
                             items={ProjectAffiliationTabItems}
                             selectedTab={currentTab}
                             onSelect={(key) => setParams({t: key})}
                         />
-                        { currentTab === ProjectAffiliation.Owned ? <CreateProjectButton/> : undefined }
                     </div>
                     <div className={"projects-page__projects-list"}>
                         {isLoading ? <LoaderCmp/> :
@@ -61,12 +61,11 @@ const ProjectsPage = () => {
                                 <ProjectItem
                                     id={project.project_id}
                                     name={project.project_name}
-                                    // members={project.project_members}
-                                    members={[{id: "2f801b04-2e54-45bd-bf19-097255f59d92", name: "string"}, {id: "2f801b04-2e54-45bd-bf19-097255f59d96", name: "Санёк"}]}
+                                    members={project.project_members}
                                     owner={project.project_owner}
                                     key={project.project_id}
                                 />
-                            ) : "Список проектов пуст"}
+                            ) : <span className={"projects-page__empty-list-text"}>Список проектов пуст</span>}
                     </div>
                 </div>
             </div>
@@ -88,15 +87,6 @@ const ProjectItem = ({id, name, members, owner}: ProjectItemProps) => {
     const queryClient = useQueryClient();
     const {toastSuccess, toastError} = useNotification();
 
-    const {mutate: removeMember} = useMutation({
-        mutationFn: (userId: string) => service.removeProjectMember(id, userId),
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: queryKeys.projects()})
-            toastSuccess("Пользователь исключён")
-        },
-        onError: () => toastError("Ошибка")
-    });
-
     const {mutate: deleteProject} = useMutation({
         mutationFn: () => service.deleteProject(id),
         onSuccess: () => {
@@ -113,34 +103,8 @@ const ProjectItem = ({id, name, members, owner}: ProjectItemProps) => {
     return (
         <Link to={generatePath(RouterLinks.Project, {id})} className={"project-card"}>
             <div>
-                <EditProjectName name={name} projectId={id}/>
-                <div className={"project-card__members"}>
-                    <span>Участники:</span>
-                    <div>
-                        {
-                            members.map(member =>
-                                member.id === owner.id ?
-                                    <TooltipCmp direction={"top"} text={"Владелец проекта"} key={member.id}>
-                                        <BadgeCmp type={"primary"}>{member.name}</BadgeCmp>
-                                    </TooltipCmp>
-                                 : <BadgeCmp key={member.id} type={"default"} className={"project-card__member"}>
-                                        {member.name}
-                                    <TooltipCmp direction={"top"} text={"Исключить"}>
-                                        <svg
-                                            width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                removeMember(member.id);
-                                            }}
-                                        >
-                                            <path d="M17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41L17.59 5Z"/>
-                                        </svg>
-                                    </TooltipCmp>
-                                 </BadgeCmp>)
-                        }
-                        { isOwner() ? <AddMemberButton projectId={id} members={members}/> : undefined }
-                    </div>
-                </div>
+                <span>{name}</span>
+                <ProjectMembersCmp projectId={id} members={members} owner={owner}/>
             </div>
             {
                 isOwner() ?
@@ -157,137 +121,6 @@ const ProjectItem = ({id, name, members, owner}: ProjectItemProps) => {
                     </TooltipCmp> : undefined
             }
         </Link>
-    )
-}
-
-const USER_MOCKS = [
-    {
-        id: "2f801b04-2e54-45bd-bf19-097255f59d92",
-        email: "user@example.com",
-        name: "string"
-    },
-    {
-        id: "33333",
-        email: "user666@example.com",
-        name: "Саня"
-    },
-    {
-        id: "22222",
-        email: "use4444r@example.com",
-        name: "Андрей"
-    }
-]
-
-interface AddMemberButtonProps {
-    projectId: string,
-    members: MemberDto[]
-}
-
-const AddMemberButton = ({projectId, members}: AddMemberButtonProps) => {
-
-    const queryClient = useQueryClient();
-    const {toastSuccess, toastError} = useNotification();
-
-    const [isOpen, setIsOpen] = useState(false);
-    const ref = useOutsideClick(() => {
-        setIsOpen(false);
-    });
-
-    const {mutate: addMember} = useMutation({
-        mutationFn: (userId: string) => service.addProjectMember(projectId, userId),
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: queryKeys.projects()})
-            toastSuccess("Пользователь добавлен")
-        },
-        onError: () => toastError("Ошибка")
-    });
-
-    return (
-        <div className={"project-card__add-member-btn"} ref={ref}>
-            <BadgeCmp
-                type={"ghost"}
-                onClick={(e) => {
-                    e.preventDefault()
-                    setIsOpen(!isOpen)
-                }}
-            >+ Добавить</BadgeCmp>
-            {
-                isOpen ?
-                    <div onClick={(e) => e.preventDefault()}>
-                        <input placeholder={"Введите имя пользователя"}/>
-                        <ul>
-                            {
-                                USER_MOCKS.filter(user => !members
-                                    .find(member => member.id === user.id))
-                                    .map(user =>
-                                    <li key={user.id}>
-                                        <div>
-                                            <span>{user.name}</span>
-                                            <span>{user.email}</span>
-                                        </div>
-                                        <BadgeCmp
-                                            type={"primary"}
-                                            onClick={() => addMember(user.id)}
-                                        >Добавить</BadgeCmp>
-                                    </li>
-                                )
-                            }
-                        </ul>
-                    </div> : undefined
-            }
-        </div>
-    )
-}
-
-interface EditProjectNameProps {
-    projectId: string,
-    name: string
-}
-
-const EditProjectName = ({name, projectId}: EditProjectNameProps) => {
-
-    const [isEdit, setEdit] = useState(false);
-    const [value, setValue] = useState(name);
-
-    const queryClient = useQueryClient();
-    const {toastSuccess, toastError} = useNotification();
-
-    const {mutate: editProject} = useMutation({
-        mutationFn: (data: EditProjectNameDto) => service.editProjectName(projectId, data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: queryKeys.projects()})
-            toastSuccess("Название сохранено")
-        },
-        onError: (error: AxiosError) => {
-            error.response?.status === 400 && toastError("Название проекта уже занято")
-            error.response?.status === 422 && toastError("Название проекта должно состоять только из символов латиницы, цифр и нижнего подчеркивания")
-        }
-    });
-
-    const onBlur = () => {
-        setEdit(false)
-        if (value.toUpperCase() !== name.toUpperCase())
-            editProject({new_project_name: value})
-    }
-
-    return (
-        <div className={"project-card__edit-project-name"}>
-            {
-                isEdit
-                    ? <input
-                        value={value}
-                        onBlur={onBlur}
-                        autoFocus={true}
-                        onChange={(e) => setValue(e.target.value)}
-                    />
-                    : <TooltipCmp direction={"top"} text={"Нажмите, чтобы редактировать"}><h6
-                        onClick={(e) => {
-                            e.preventDefault()
-                            setEdit(true)
-                        }}
-                    >{name}</h6></TooltipCmp>
-            }
-        </div>
     )
 }
 

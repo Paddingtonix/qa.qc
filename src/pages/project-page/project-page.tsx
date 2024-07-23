@@ -1,13 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./style.sass"
-import {useQuery} from "@tanstack/react-query";
-import {queryKeys, service} from "../../utils/api/service";
+import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {EditProjectNameDto, queryKeys, service} from "../../utils/api/service";
 import {useParams, useSearchParams} from "react-router-dom";
 import LoadProjectTab from "./load-tab";
 import FilesTab from "./files-tab";
 import DataTab from "./data-tab";
 import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
+import TabsCmp, {TabItem} from "../../components/base/tabs-cmp/tabs-cmp";
+import ProjectMembersCmp from "../../components/ui-components/project-members/ProjectMembersCmp";
+import {useNotification} from "../../components/base/notification/notification-provider";
+import {AxiosError} from "axios";
+import TooltipCmp from "../../components/base/tooltip-cmp/tooltip-cmp";
 
 enum ProjectTab {
     Load = "load",
@@ -15,16 +20,23 @@ enum ProjectTab {
     Data = "data"
 }
 
-const ProjectTabItems = [
-    { key: ProjectTab.Load, name: "Загрузка данных" },
-    { key: ProjectTab.Files, name: "Файлы" },
-    { key: ProjectTab.Data, name: "Загруженные данные" }
+const ProjectTabItems: TabItem[] = [
+    { key: ProjectTab.Load, title: "Загрузка данных" },
+    { key: ProjectTab.Files, title: "Файлы" },
+    { key: ProjectTab.Data, title: "Загруженные данные" }
 ]
 
 export const ProjectPage = () => {
 
     const {id: projectId} = useParams()
     const [params, setParams] = useSearchParams()
+
+    const {data: project, isLoading: loadingProject} = useQuery({
+        queryKey: queryKeys.project(projectId),
+        queryFn: () => service.getProject(projectId || ""),
+        select: ({data}) => data,
+        enabled: !!projectId
+    })
 
     const {data: projectFiles, isLoading} = useQuery({
         queryKey: queryKeys.projectFiles(projectId),
@@ -65,26 +77,80 @@ export const ProjectPage = () => {
     return (
         <PageLayoutCmp>
             <div className="project-page">
-                <div className={"project-page__header"}>
-                    <h2>Project name</h2>
-                    <h5>Загрузите данные для тестирования</h5>
-                    <div className={"tabs"}>
-                        {
-                            ProjectTabItems?.map(tab =>
-                                <div key={tab.key}
-                                     className={`tabs__item ${tab.key === currentTab ? "tabs__item_selected" : null}`}
-                                     onClick={() => setParams({t: tab.key})}
-                                >
-                                    {tab.name}
-                                </div>)
-                        }
-                    </div>
-                </div>
+                {
+                    (loadingProject || !project) ? <LoaderCmp/> :
+                        <div className={"project-page__header"}>
+                            <EditProjectName name={project.project_name} projectId={project.project_id}/>
+                            <ProjectMembersCmp
+                                members={project.project_members}
+                                projectId={project.project_id}
+                                owner={project.project_owner}
+                                enableEdit={true}
+                            />
+                            <TabsCmp
+                                items={ProjectTabItems}
+                                selectedTab={currentTab}
+                                onSelect={(key) => setParams({t: key})}
+                            />
+                        </div>
+                }
                 <div className={"project-page__content"}>
                     { isLoading || loadingCategories ? <LoaderCmp/> : ProjectTabContent[currentTab] || "Раздел не найден" }
                 </div>
             </div>
         </PageLayoutCmp>
+    )
+}
+
+interface EditProjectNameProps {
+    projectId: string,
+    name: string
+}
+
+const EditProjectName = ({name, projectId}: EditProjectNameProps) => {
+
+    const [isEdit, setEdit] = useState(false);
+    const [value, setValue] = useState(name);
+
+    const queryClient = useQueryClient();
+    const {toastSuccess, toastError} = useNotification();
+
+    const {mutate: editProject} = useMutation({
+        mutationFn: (data: EditProjectNameDto) => service.editProjectName(projectId, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: queryKeys.project(projectId)})
+            toastSuccess("Название сохранено")
+        },
+        onError: (error: AxiosError) => {
+            error.response?.status === 400 && toastError("Название проекта уже занято")
+            error.response?.status === 422 && toastError("Название проекта должно состоять только из символов латиницы, цифр и нижнего подчеркивания")
+        }
+    });
+
+    const onBlur = () => {
+        setEdit(false)
+        if (value.toUpperCase() !== name.toUpperCase())
+            editProject({new_project_name: value})
+    }
+
+    return (
+        <div className={"edit-project-name-cmp"}>
+            {
+                isEdit
+                    ? <input
+                        value={value}
+                        onBlur={onBlur}
+                        autoFocus={true}
+                        onChange={(e) => setValue(e.target.value)}
+                    />
+                    : <TooltipCmp direction={"top"} text={"Нажмите, чтобы редактировать"}><h6
+                        onClick={(e) => {
+                            e.preventDefault()
+                            setEdit(true)
+                        }}
+                    >{name}</h6></TooltipCmp>
+            }
+        </div>
     )
 }
 
