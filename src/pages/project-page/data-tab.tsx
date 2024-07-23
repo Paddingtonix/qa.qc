@@ -1,10 +1,11 @@
-import {useState} from "react";
-import {MockDataData} from "./MOCK_DATA";
+import {useCallback, useState} from "react";
+import {MockDataData, NODES_DATA} from "./MOCK_DATA";
 import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
-import {ProjectDataDto, queryKeys, service} from "../../utils/api/service";
+import {NodeDto, ProjectDataDto, queryKeys, service} from "../../utils/api/service";
 import {useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
+import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
 
 interface Props {
     data?: ProjectDataDto
@@ -73,12 +74,87 @@ const DataTab = ({data}: Props) => {
 };
 
 interface NodeDataProps {
-    data?: any[]
+    data?: NodeDto[]
 }
 
-const NodeData = ({data}: NodeDataProps)  => {
+interface NodeType {
+    deep?: number,
+    type?: number,
+    facia?: string
+}
+
+const columnHelper = createColumnHelper<NodeType>()
+
+const columns = [
+    columnHelper.accessor("deep", {
+        header: () => "Глубина",
+        cell: (props) => props.getValue()
+    }),
+    columnHelper.accessor("type", {
+        header: () => "Кп_абс",
+        cell: (props) => props.getValue()
+    }),
+    columnHelper.accessor("facia", {
+        header: () => "Фации",
+        cell: (props) => props.getValue()
+    })
+]
+const NodeData = ({data = []}: NodeDataProps)  => {
+
+    const getTableData = useCallback((): NodeType[] => {
+        const _data: NodeType[] = [];
+        data?.forEach((node, index) => {
+            _data.push({
+                deep: node.values_attributes.Глубина[index],
+                type: node.node_data[index],
+                facia: ""
+            })
+        })
+        console.log(_data)
+        return _data;
+    }, [data])
+
+    const table = useReactTable<NodeType>({
+        data: getTableData(),
+        columns,
+        getCoreRowModel: getCoreRowModel()
+    })
+
     return (
-        <div><p>{JSON.stringify(data)}</p></div>
+        <table className={"table-cmp"}>
+            <thead>
+            {
+                table.getHeaderGroups().map(headerGroup =>
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header =>
+                            <th key={header.id} className="text-left">
+                                <div>
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                                </div>
+                            </th>
+                        )}
+                    </tr>
+                )
+            }
+            </thead>
+            <tbody>
+            {
+                table.getRowModel().rows.map(row =>
+                    <tr key={row.id}>
+                        {
+                            row.getVisibleCells().map(cell =>
+                                <td key={cell.id} className="text-left">
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>)
+                        }
+                    </tr>
+                )
+            }
+            </tbody>
+        </table>
     )
 }
 

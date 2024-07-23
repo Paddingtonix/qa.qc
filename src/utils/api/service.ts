@@ -22,10 +22,6 @@ class Service {
         return instance.get<{result: {message: string, tests: TestDto[]}}>(`/project/${projectId}/test/get/`)
     }
 
-    async getProjectNodes(projectId: string) {
-        return instance.get<{nodes: NodeDto[]}>(`/project/${projectId}/node/get/`)
-    }
-
     async createProject(data: CreateProjectDto) {
         return instance.post(`/project/create_project/`, data)
     }
@@ -58,7 +54,7 @@ class Service {
     }
 
     async getNodes(projectId: string, typeNodeId: string) {
-        return instance.get<any[]>(`/project/${projectId}/nodes/get/`, {
+        return instance.get<NodeDto[]>(`/project/${projectId}/nodes/get/`, {
             params: {type_node_id: typeNodeId}
         })
     }
@@ -199,11 +195,14 @@ export type CategoryDto = {
 }
 
 export type NodeDto = {
-    attributes: string[],
-    category: string,
-    domain: string,
-    id: string,
-    name: string
+    _id: string,
+    type_node: string,
+    node_data: Array<number | undefined>,
+    values_attributes: {
+        WELL: string,
+        Фации: string,
+        Глубина: Array<number | undefined>
+    }
 }
 
 export type ProjectDataDto = {
