@@ -36,6 +36,7 @@ const DropdownCmp = (props: DropdownCmpProps) => {
         return items?.find(item => item.key === selectedItem)
     }
 
+
     return (
         <div className='dropdown' ref={ref}>
             <div className={`dropdown__input ${!getSelectedItem() && "dropdown__input_empty"}`} onClick={() => setOpen(!open)}>

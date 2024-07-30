@@ -110,7 +110,6 @@ const NodeData = ({data = []}: NodeDataProps)  => {
                 facia: ""
             })
         })
-        console.log(_data)
         return _data;
     }, [data])
 
@@ -121,40 +120,44 @@ const NodeData = ({data = []}: NodeDataProps)  => {
     })
 
     return (
-        <table className={"table-cmp"}>
-            <thead>
-            {
-                table.getHeaderGroups().map(headerGroup =>
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map(header =>
-                            <th key={header.id} className="text-left">
-                                <div>
-                                    {flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                                </div>
-                            </th>
-                        )}
-                    </tr>
-                )
-            }
-            </thead>
-            <tbody>
-            {
-                table.getRowModel().rows.map(row =>
-                    <tr key={row.id}>
-                        {
-                            row.getVisibleCells().map(cell =>
-                                <td key={cell.id} className="text-left">
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>)
-                        }
-                    </tr>
-                )
-            }
-            </tbody>
-        </table>
+        <div className={"node-data-info"}>
+            <div className={"node-data-info__table"}>
+                <table className={"table-cmp"}>
+                    <thead>
+                    {
+                        table.getHeaderGroups().map(headerGroup =>
+                            <tr key={headerGroup.id}>
+                                {headerGroup.headers.map(header =>
+                                    <th key={header.id} className="text-left">
+                                        <div>
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                        </div>
+                                    </th>
+                                )}
+                            </tr>
+                        )
+                    }
+                    </thead>
+                    <tbody>
+                    {
+                        table.getRowModel().rows.map(row =>
+                            <tr key={row.id}>
+                                {
+                                    row.getVisibleCells().map(cell =>
+                                        <td key={cell.id} className="text-left">
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>)
+                                }
+                            </tr>
+                        )
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     )
 }
 
@@ -173,14 +176,20 @@ function parseNodeDataToTreeData(data: ProjectDataDto) {
     treeData.push({
         value: "Узлы данных",
         label: "Узлы данных",
-        children: data.nodes.map(domain => {
+        children: data.domains.map(domain => {
             return {
-                value: domain.domain,
-                label: `Домен "${domain.domain}"`,
-                children: domain.type_node.map(typeNode => {
+                value: domain.name,
+                label: `Домен "${domain.name}"`,
+                children: domain.type_nodes.map(typeNode => {
                     return {
                         value: typeNode.id,
-                        label: typeNode.value
+                        label: typeNode.name,
+                        children: typeNode.nodes.map(node => {
+                            return {
+                                value: node.id,
+                                label: node.name,
+                            }
+                        })
                     }
                 })
             }

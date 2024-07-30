@@ -206,12 +206,16 @@ export type NodeDto = {
 }
 
 export type ProjectDataDto = {
-    nodes: {
-        type_node: {
+    domains: {
+        type_nodes: {
             id: string,
-            value: string
+            name: string,
+            nodes: {
+                id: string,
+                name: string
+            }[]
         }[],
-        domain: string
+        name: string
     }[],
     primary: {
       type_data: string[],

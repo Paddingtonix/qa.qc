@@ -234,6 +234,8 @@
     background-color: $dark-background-color
     padding: toRem(20) toRem(40)
     width: toRem(350)
+    max-height: toRem(500)
+    overflow-y: auto
 
   &__info
     display: flex
@@ -352,3 +354,12 @@
     color: $headers-color
     text-transform: uppercase
     border-bottom: 1px $text-color solid
+
+.node-data-info
+  display: flex
+  flex-direction: column
+  gap: toRem(10)
+
+  &__table
+    max-height: 500px
+    overflow-y: auto

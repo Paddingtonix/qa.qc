@@ -185,7 +185,7 @@ function getExtension(file_name: string | undefined) {
 function getCategoriesItems(categories: CategoryDto[]) {
     return categories.map(category => {return {
         key: category.name,
-        title: category.name + "dddddddd",
+        title: category.name,
         prefix: <HintIconCmp text={category.description}/>
     }})
 }
