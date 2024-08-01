@@ -1,8 +1,9 @@
 import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
 import {useState} from "react";
 import {MockDataFiles, NODES_DATA} from "./MOCK_DATA";
-import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+import {createColumnHelper} from "@tanstack/react-table";
 import {CategoryDto, ProjectFileDto} from "../../utils/api/service";
+import {TableCmp} from "../../components/base/table-cmp/TableCmp";
 
 interface Props {
     categories?: CategoryDto[],
@@ -18,8 +19,7 @@ const FilesTab = ({categories, files}: Props) => {
             <div className={"files-tab__tree"}>
                 <TreeCmp
                     items={(files && categories) ? parseProjectFilesToTreeData(files, categories) : []}
-                    onSelect={(value) => setSelectedFile(value)}
-                    maxDepth={1}
+                    onSelect={(value, deep) => setSelectedFile(deep === 1 ? value : selectedFile)}
                 />
             </div>
             <div>
@@ -38,7 +38,7 @@ const FilesTab = ({categories, files}: Props) => {
                 {
                     selectedFile &&
                     <div className={"files-tab__table"}>
-                        <NodesTable/>
+                        <TableCmp columns={columns} data={NODES_DATA}/>
                     </div>
                 }
             </div>
@@ -68,54 +68,6 @@ const columns = [
         cell: (props) => props.getValue()
     })
 ]
-
-const NodesTable = () => {
-
-    const [data, setData] = useState(NODES_DATA);
-
-    const table = useReactTable<NodeType>({
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel()
-    })
-
-    return (
-        <table className={"table-cmp"}>
-            <thead>
-            {
-                table.getHeaderGroups().map(headerGroup =>
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map(header =>
-                            <th key={header.id} className="text-left">
-                                <div>
-                                    {flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                                </div>
-                            </th>
-                        )}
-                    </tr>
-                )
-            }
-            </thead>
-            <tbody>
-            {
-                table.getRowModel().rows.map(row =>
-                    <tr key={row.id}>
-                        {
-                            row.getVisibleCells().map(cell =>
-                                <td key={cell.id} className="text-left">
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>)
-                        }
-                    </tr>
-                )
-            }
-            </tbody>
-        </table>
-    )
-}
 
 function parseProjectFilesToTreeData(files: ProjectFileDto[], categories: CategoryDto[]) {
     const treeData: TreeItem[] = [];

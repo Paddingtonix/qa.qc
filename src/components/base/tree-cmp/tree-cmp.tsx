@@ -3,9 +3,8 @@ import "./style.sass"
 
 interface TreeProps {
     items?: TreeItem[],
-    maxDepth?: number,
     selectedValue?: string,
-    onSelect?(value: string): void
+    onSelect?(value: string, deep: number): void
 }
 
 export interface TreeItem {
@@ -18,7 +17,6 @@ const TreeCmp = (props: TreeProps) => {
 
     const {
         items,
-        maxDepth,
         selectedValue: initialSelectedValue,
         onSelect
     } = props;
@@ -28,9 +26,10 @@ const TreeCmp = (props: TreeProps) => {
         setSelectedValue(initialSelectedValue)
     }, [initialSelectedValue])
 
-    const selectValue = useCallback((value: string) => {
-        onSelect && onSelect(value !== selectedValue ? value : "");
-        setSelectedValue(value !== selectedValue ? value : "");
+    const selectValue = useCallback((value: string, deep: number) => {
+        onSelect
+            ? onSelect(value !== selectedValue ? value : "", deep)
+            : setSelectedValue(value !== selectedValue ? value : "");
     }, [selectedValue])
 
     const isSelectedValue = useCallback((value: string) => {
@@ -49,7 +48,6 @@ const TreeCmp = (props: TreeProps) => {
                             selectValue={selectValue}
                             isSelectedValue={isSelectedValue}
                             depth={0}
-                            maxDepth={maxDepth}
                         />)
                 }
             </ul>
@@ -60,8 +58,7 @@ const TreeCmp = (props: TreeProps) => {
 
 interface TreeItemProps extends TreeItem {
     depth: number,
-    maxDepth?: number,
-    selectValue(value: string): void,
+    selectValue(value: string, deep: number): void,
     isSelectedValue(value: string): boolean,
 }
 
@@ -72,29 +69,26 @@ const TreeItem = (props: TreeItemProps) => {
         label,
         children,
         depth,
-        maxDepth,
         selectValue,
         isSelectedValue
     } = props;
 
     const onSelect = () => {
-        ((maxDepth && depth < maxDepth) || children?.length)
-            ? setOpen(!open)
-            : selectValue(value)
+        selectValue(value, depth)
     }
 
     const [open, setOpen] = useState(false);
 
     return (
-        <li className={`tree-item ${open && "tree-item_open"} ${!((maxDepth && depth < maxDepth) || children?.length) && "tree-item_ended"} ${isSelectedValue(value) && "tree-item_selected"}`}>
-            <div onClick={onSelect}>
-                <span>{ label }</span>
+        <li className={`tree-item ${open && "tree-item_open"} ${isSelectedValue(value) && "tree-item_selected"}`}>
+            <div>
                 {
-                    ((maxDepth && depth < maxDepth) || children?.length) ?
-                        <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    (children?.length) ?
+                        <svg onClick={() => setOpen(!open)} width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3.51501 8.465L12 16.95L20.485 8.465L19.071 7.05L12 14.122L4.92901 7.05L3.51501 8.465Z"/>
                         </svg> : undefined
                 }
+                <span onClick={onSelect}>{ label }</span>
             </div>
             {
                 (children && open) &&

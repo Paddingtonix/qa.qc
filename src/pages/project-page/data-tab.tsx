@@ -1,80 +1,118 @@
-import {useCallback, useState} from "react";
+import React, {ReactNode, useCallback} from "react";
 import {MockDataData, NODES_DATA} from "./MOCK_DATA";
 import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
-import {NodeDto, ProjectDataDto, queryKeys, service} from "../../utils/api/service";
+import {ProjectDataDto, queryKeys, service} from "../../utils/api/service";
 import {useQuery} from "@tanstack/react-query";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
-import {createColumnHelper, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+import {createColumnHelper} from "@tanstack/react-table";
+import {TableCmp} from "../../components/base/table-cmp/TableCmp";
 
 interface Props {
     data?: ProjectDataDto
 }
 
+enum ContentType {
+    Domain = "domain",
+    TypeNode = "type-node",
+    Node = "node",
+    Primary = "primary",
+    Null = "null"
+}
+
+const contentParamKey = "c";
+const nodeParamKey = "n";
+
+interface ContentTypeOptionsItem {
+    title?: string,
+    content?: ReactNode
+}
+
 const DataTab = ({data}: Props) => {
 
-    const [selectedNode, setSelectedNode] = useState<string | undefined>(undefined);
-    const [selectedCategory, setSelectedCategory] = useState<"node" | "primary" | undefined>(undefined);
+    const [params, setParams] = useSearchParams()
     const {id: projectId} = useParams()
 
-    const {data: nodes, isLoading: loadingNode} = useQuery({
-        queryKey: queryKeys.projectNodes(projectId, selectedNode),
-        queryFn: () => service.getNodes(projectId || "", selectedNode || ""),
-        select: ({data}) => data,
-        enabled: !!projectId && !!selectedNode && selectedCategory === "node"
-    })
+    const currentContentType = params.get(contentParamKey) as ContentType || ContentType.Null;
+    const selectedNode = params.get(nodeParamKey) as string || "";
 
-    const {data: primary, isLoading: loadingPrimary} = useQuery({
-        queryKey: queryKeys.projectPrimary(projectId, selectedNode),
-        queryFn: () => service.getPrimary(projectId || "", selectedNode || ""),
-        select: ({data}) => data,
-        enabled: !!projectId && !!selectedNode && selectedCategory === "primary"
-    })
+    const setContentParams = (contentType: ContentType, nodeId: string) => {
+        setParams(searchParams => {
+            searchParams.set(contentParamKey, contentType !== ContentType.Null ? contentType : "");
+            searchParams.set(nodeParamKey, nodeId);
+            return searchParams;
+        });
+    }
 
-    console.log("Узлы", nodes)
-    console.log("Первичные данные", primary)
+    const ContentTypeOptions: Record<ContentType, ContentTypeOptionsItem> = {
+        [ContentType.Domain]: {
+            title: "Домен",
+            content: <DomainData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+        },
+        [ContentType.TypeNode]: {
+            title: "Тип узла",
+            content: <TypeNodeData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+        },
+        [ContentType.Node]: {
+            title: "Узел",
+            content: <NodeData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+        },
+        [ContentType.Primary]: {
+            title: "Информация о первичных данных",
+            content: <PrimaryData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+        },
+        [ContentType.Null]: {
+            content: <h5>Выберите узел</h5>
+        }
+    }
+
+    const NodeContentTypeDeep: Record<number, ContentType> = {
+        0: ContentType.Null,
+        1: ContentType.Domain,
+        2: ContentType.TypeNode,
+        3: ContentType.Node
+    }
+
+    const PrimaryContentTypeDeep: Record<number, ContentType> = {
+        0: ContentType.Null,
+        1: ContentType.Null,
+        2: ContentType.Primary
+    }
+
+    const onSelectNode = useCallback((type: "availableData" | "primaryData", value: string, deep: number) => {
+        if (deep === 0) return;
+        setContentParams(
+            type === "availableData" ? NodeContentTypeDeep[deep] : PrimaryContentTypeDeep[deep],
+            value
+        )
+    }, [])
 
     return (
         <div className={"data-tab"}>
             <div className={"data-tab__tree"}>
                 <TreeCmp
                     items={data ? parseNodeDataToTreeData(data) : []}
-                    onSelect={(value) => {
-                        setSelectedCategory("node")
-                        setSelectedNode(value)
-                    }}
+                    onSelect={(value, deep) => onSelectNode("availableData", value, deep)}
                     selectedValue={selectedNode}
                 />
                 <TreeCmp
                     items={data ? parsePrimaryDataToTreeData(data) : []}
-                    onSelect={(value) => {
-                        setSelectedCategory("primary")
-                        setSelectedNode(value)
-                    }}
+                    onSelect={(value, deep) => onSelectNode("primaryData", value, deep)}
                     selectedValue={selectedNode}
                 />
             </div>
             <div className={"data-tab__info"}>
-                {
-                    selectedNode ?
-                        <>
-                            <h4>Информация о {selectedCategory === "node" ? "узле" : "данных"}</h4>
-                            {
-                                ((selectedCategory === "node" && loadingNode) || (selectedCategory === "primary" && loadingPrimary))
-                                    ? <LoaderCmp/> : selectedCategory === "node"
-                                        ? <NodeData data={nodes}/>
-                                        : <PrimaryData data={primary}/>
-                            }
-                        </>
-                        : <h5>Выберите узел</h5>
-                }
+                <h4>{ContentTypeOptions[currentContentType]?.title}</h4>
+                {ContentTypeOptions[currentContentType]?.content}
             </div>
         </div>
     )
 };
 
-interface NodeDataProps {
-    data?: NodeDto[]
+interface ContentTypeProps {
+    projectId: string,
+    selectedNode: string,
+    setContentParams(contentType: ContentType, nodeId: string): void
 }
 
 interface NodeType {
@@ -83,23 +121,31 @@ interface NodeType {
     facia?: string
 }
 
-const columnHelper = createColumnHelper<NodeType>()
+const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 
-const columns = [
-    columnHelper.accessor("deep", {
-        header: () => "Глубина",
-        cell: (props) => props.getValue()
-    }),
-    columnHelper.accessor("type", {
-        header: () => "Кп_абс",
-        cell: (props) => props.getValue()
-    }),
-    columnHelper.accessor("facia", {
-        header: () => "Фации",
-        cell: (props) => props.getValue()
+    const {data, isLoading} = useQuery({
+        queryKey: queryKeys.projectNodes(projectId, selectedNode),
+        queryFn: () => service.getNodes(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode
     })
-]
-const NodeData = ({data = []}: NodeDataProps)  => {
+
+    const columnHelper = createColumnHelper<NodeType>()
+
+    const columns = [
+        columnHelper.accessor("deep", {
+            header: () => "Глубина",
+            cell: (props) => props.getValue()
+        }),
+        columnHelper.accessor("type", {
+            header: () => "Кп_абс",
+            cell: (props) => props.getValue()
+        }),
+        columnHelper.accessor("facia", {
+            header: () => "Фации",
+            cell: (props) => props.getValue()
+        })
+    ]
 
     const getTableData = useCallback((): NodeType[] => {
         const _data: NodeType[] = [];
@@ -113,61 +159,91 @@ const NodeData = ({data = []}: NodeDataProps)  => {
         return _data;
     }, [data])
 
-    const table = useReactTable<NodeType>({
-        data: getTableData(),
-        columns,
-        getCoreRowModel: getCoreRowModel()
-    })
-
     return (
         <div className={"node-data-info"}>
-            <div className={"node-data-info__table"}>
-                <table className={"table-cmp"}>
-                    <thead>
-                    {
-                        table.getHeaderGroups().map(headerGroup =>
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map(header =>
-                                    <th key={header.id} className="text-left">
-                                        <div>
-                                            {flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                        </div>
-                                    </th>
-                                )}
-                            </tr>
-                        )
-                    }
-                    </thead>
-                    <tbody>
-                    {
-                        table.getRowModel().rows.map(row =>
-                            <tr key={row.id}>
-                                {
-                                    row.getVisibleCells().map(cell =>
-                                        <td key={cell.id} className="text-left">
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>)
-                                }
-                            </tr>
-                        )
-                    }
-                    </tbody>
-                </table>
-            </div>
+            {
+                (isLoading && !data) ? <LoaderCmp/> :
+                    <>
+                        <h5>Кп_откр/Core(well: 17b7)</h5>
+                        <div className={"node-data-info__table"}>
+                            <TableCmp columns={columns} data={getTableData()}/>
+                        </div>
+                    </>
+            }
         </div>
     )
 }
 
-interface PrimaryDataProps {
-    data?: any[]
+const DomainData = ({setContentParams}: ContentTypeProps) => {
+
+    const TypeNodes = [
+        {id: "33", type_node: "Кп_откр (well: x18)"},
+        {id: "444", type_node: "Кпр_абс (well: x18)"},
+        {id: "55", type_node: "Кво (well: x18"}
+    ]
+
+    const onSelect = (id: string) => {
+        setContentParams(ContentType.TypeNode, id)
+    }
+
+    return (
+        <div className={"domain-data"}>
+            <h5>Core</h5>
+            <span>Типы узлов:</span>
+            <ul>
+                {
+                    TypeNodes.map(type =>
+                        <li key={type.id} onClick={() => onSelect(type.id)}>{type.type_node}</li>
+                    )
+                }
+            </ul>
+        </div>
+    )
 }
 
-const PrimaryData = ({data}: PrimaryDataProps)  => {
+const TypeNodeData = ({setContentParams}: ContentTypeProps) => {
+
+    const Nodes = [
+        {id: "33", node: "Кп_откр/Core(well: 17b7)"},
+        {id: "444", node: "Кп_откр/Core(well: 17ba)"},
+        {id: "55", node: "Кп_откр/Core(well: 54ac)"}
+    ]
+
+    const onSelect = (id: string) => {
+        setContentParams(ContentType.Node, id)
+    }
+
     return (
-        <div><p>{JSON.stringify(data)}</p></div>
+        <div className={"domain-data"}>
+            <h5>Кп_откр (well: x18)</h5>
+            <span>Узлы:</span>
+            <ul>
+                {
+                    Nodes.map(type =>
+                        <li key={type.id} onClick={() => onSelect(type.id)}>{type.node}</li>
+                    )
+                }
+            </ul>
+        </div>
+    )
+}
+
+const PrimaryData = ({selectedNode, projectId}: ContentTypeProps) => {
+
+    const {data, isLoading} = useQuery({
+        queryKey: queryKeys.projectPrimary(projectId, selectedNode),
+        queryFn: () => service.getPrimary(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode
+    })
+
+    return (
+        <div>
+            {
+                (isLoading && !data) ? <LoaderCmp/> :
+                    <p>{JSON.stringify(data)}</p>
+            }
+        </div>
     )
 }
 

@@ -247,8 +247,7 @@
 
     h4
       font-weight: normal
-      font-size: toRem(24)
-      color: $headers-color
+      color: $text-color
 
     > div
       display: flex
@@ -266,80 +265,6 @@
       font-size: toRem(18)
       color: $text-color
       margin: toRem(40) 0
-
-
-.table-cmp
-  border-collapse: collapse
-  width: 100%
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3)
-
-  th
-    color: $headers-color
-    background: $dark-background-color
-    border-right: 1px solid #363636
-    font-size: 18px
-    padding: 18px 14px
-    text-align: left
-    vertical-align: middle
-
-    &:last-child
-      border-right: none
-
-    .text-left
-      text-align: left
-
-    .text-center
-      text-align: center
-
-    .text-right
-      text-align: right
-
-  tr
-    border-top: 1px solid #363636
-    border-bottom: 1px solid #363636
-    color: $text-color
-    font-size: 16px
-    font-weight: normal
-
-    &:hover
-      td
-        background: #00727c
-        color: #FFFFFF
-
-    &:first-child
-      border-top: none
-
-    &:last-child
-      border-bottom: none
-
-    &:nth-child(odd)
-      td
-        background: #262626
-
-      &:hover
-        td
-          background: #039da8
-
-  td
-    overflow: hidden
-    background: #333333
-    padding: 8px 14px
-    text-align: left
-    font-size: 14px
-    border-right: 1px solid #363636
-    transition: .1s
-
-    &:last-child
-      border-right: 0
-
-    .text-left
-      text-align: left
-
-    .text-center
-      text-align: center
-
-    .text-right
-      text-align: right
 
 .edit-project-name-cmp
   h6
@@ -360,6 +285,41 @@
   flex-direction: column
   gap: toRem(10)
 
+  h5
+    color: $headers-color
+    text-align: start
+    font-size: toRem(24)
+    margin: 0
+    text-transform: uppercase
+
   &__table
     max-height: 500px
     overflow-y: auto
+
+.domain-data
+  display: flex
+  flex-direction: column
+  gap: toRem(5)
+
+  h5
+    color: $headers-color
+    text-align: start
+    font-size: toRem(24)
+    margin: 0
+    text-transform: uppercase
+
+  span
+    color: $text-color
+    margin-top: toRem(10)
+
+  ul
+    margin: 0
+    padding: 0
+
+    li
+      margin-top: toRem(5)
+      list-style: none
+      cursor: pointer
+
+      &:hover
+        color: $primary-color

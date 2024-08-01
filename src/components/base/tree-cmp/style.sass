@@ -8,48 +8,46 @@
     border-left: 1px solid #3a3a3a
 
     .tree-item
-      margin-top: toRem(10)
+
       transition: .3s
       user-select: none
 
-      &_ended
-        margin-top: toRem(5)
-        padding: toRem(5) toRem(10)
-
       &_selected
-        background-color: $primary-ghost-color
+        > div
+          background-color: $primary-ghost-color
 
-        > div > span
-          color: $primary-color
+          > span
+            color: $primary-color
 
       &_open
         > div
           svg
-            transform: rotateX(180deg)
+            transform: rotate(-90deg)
 
       > div
         display: flex
         align-items: center
-        justify-content: space-between
         gap: toRem(5)
-        cursor: pointer
         transition: .3s
+        padding: toRem(5)
 
         > span
           font-size: toRem(16)
           text-overflow: ellipsis
           overflow: hidden
           white-space: nowrap
+          cursor: pointer
 
-        &:hover
-          color: $primary-color
-
-          svg
-            fill: $primary-color
+          &:hover
+            color: $primary-color
 
         svg
           fill: $text-color
+          cursor: pointer
           transition: .3s
+
+          &:hover
+            fill: $primary-color
 
   ul:first-child
     border: none
