@@ -59,13 +59,6 @@ export const ProjectPage = () => {
         enabled: !!projectId
     })
 
-    // const {data: projectDomains} = useQuery({
-    //     queryKey: queryKeys.projectDomains(projectId),
-    //     queryFn: () => service.getDomains(projectId || ""),
-    //     select: ({data}) => data,
-    //     enabled: !!projectId
-    // })
-
     const currentTab = params.get("t") as ProjectTab || ProjectTab.Load;
 
     const ProjectTabContent: Record<ProjectTab, React.ReactNode> = {

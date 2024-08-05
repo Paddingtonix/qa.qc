@@ -90,16 +90,18 @@ const DataTab = ({data}: Props) => {
     return (
         <div className={"data-tab"}>
             <div className={"data-tab__tree"}>
-                <TreeCmp
-                    items={data ? parseNodeDataToTreeData(data) : []}
-                    onSelect={(value, deep) => onSelectNode("availableData", value, deep)}
-                    selectedValue={selectedNode}
-                />
-                <TreeCmp
-                    items={data ? parsePrimaryDataToTreeData(data) : []}
-                    onSelect={(value, deep) => onSelectNode("primaryData", value, deep)}
-                    selectedValue={selectedNode}
-                />
+                <div>
+                    <TreeCmp
+                        items={data ? parseNodeDataToTreeData(data) : []}
+                        onSelect={(value, deep) => onSelectNode("availableData", value, deep)}
+                        selectedValue={selectedNode}
+                    />
+                    <TreeCmp
+                        items={data ? parsePrimaryDataToTreeData(data) : []}
+                        onSelect={(value, deep) => onSelectNode("primaryData", value, deep)}
+                        selectedValue={selectedNode}
+                    />
+                </div>
             </div>
             <div className={"data-tab__info"}>
                 <h4>{ContentTypeOptions[currentContentType]?.title}</h4>
@@ -123,11 +125,13 @@ interface NodeType {
 
 const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 
+    const [node, typeNode] = selectedNode.split("_")
+
     const {data, isLoading} = useQuery({
-        queryKey: queryKeys.projectNodes(projectId, selectedNode),
-        queryFn: () => service.getNodes(projectId || "", selectedNode || ""),
+        queryKey: queryKeys.nodeData(projectId, selectedNode),
+        queryFn: () => service.getNodeData(projectId || "", typeNode, node),
         select: ({data}) => data,
-        enabled: !!projectId && !!selectedNode
+        enabled: !!projectId && !!node && !!typeNode
     })
 
     const columnHelper = createColumnHelper<NodeType>()
@@ -149,10 +153,10 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 
     const getTableData = useCallback((): NodeType[] => {
         const _data: NodeType[] = [];
-        data?.forEach((node, index) => {
+        data?.node_data.forEach((node, index) => {
             _data.push({
-                deep: node.values_attributes.Глубина[index],
-                type: node.node_data[index],
+                deep: data.values_attributes.Глубина[index],
+                type: data.node_data[index],
                 facia: ""
             })
         })
@@ -174,13 +178,14 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
     )
 }
 
-const DomainData = ({setContentParams}: ContentTypeProps) => {
+const DomainData = ({setContentParams, projectId, selectedNode}: ContentTypeProps) => {
 
-    const TypeNodes = [
-        {id: "33", type_node: "Кп_откр (well: x18)"},
-        {id: "444", type_node: "Кпр_абс (well: x18)"},
-        {id: "55", type_node: "Кво (well: x18"}
-    ]
+    const {data, isLoading} = useQuery({
+        queryKey: queryKeys.domainData(projectId, selectedNode),
+        queryFn: () => service.getDomainData(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode
+    })
 
     const onSelect = (id: string) => {
         setContentParams(ContentType.TypeNode, id)
@@ -188,26 +193,32 @@ const DomainData = ({setContentParams}: ContentTypeProps) => {
 
     return (
         <div className={"domain-data"}>
-            <h5>Core</h5>
-            <span>Типы узлов:</span>
-            <ul>
-                {
-                    TypeNodes.map(type =>
-                        <li key={type.id} onClick={() => onSelect(type.id)}>{type.type_node}</li>
-                    )
-                }
-            </ul>
+            {
+                (isLoading || !data) ? <LoaderCmp/> :
+                    <>
+                        <h5>{data.name}</h5>
+                        <span>Типы узлов:</span>
+                        <ul>
+                            {
+                                data.type_nodes_list.map(type =>
+                                    <li key={type.id} onClick={() => onSelect(type.id)}>{type.type_name}</li>
+                                )
+                            }
+                        </ul>
+                    </>
+            }
         </div>
     )
 }
 
-const TypeNodeData = ({setContentParams}: ContentTypeProps) => {
+const TypeNodeData = ({setContentParams, projectId, selectedNode}: ContentTypeProps) => {
 
-    const Nodes = [
-        {id: "33", node: "Кп_откр/Core(well: 17b7)"},
-        {id: "444", node: "Кп_откр/Core(well: 17ba)"},
-        {id: "55", node: "Кп_откр/Core(well: 54ac)"}
-    ]
+    const {data, isLoading} = useQuery({
+        queryKey: queryKeys.typeNodeData(projectId, selectedNode),
+        queryFn: () => service.getTypeNodeData(projectId || "", selectedNode || ""),
+        select: ({data}) => data,
+        enabled: !!projectId && !!selectedNode
+    })
 
     const onSelect = (id: string) => {
         setContentParams(ContentType.Node, id)
@@ -215,15 +226,23 @@ const TypeNodeData = ({setContentParams}: ContentTypeProps) => {
 
     return (
         <div className={"domain-data"}>
-            <h5>Кп_откр (well: x18)</h5>
-            <span>Узлы:</span>
-            <ul>
-                {
-                    Nodes.map(type =>
-                        <li key={type.id} onClick={() => onSelect(type.id)}>{type.node}</li>
-                    )
-                }
-            </ul>
+            {
+                (isLoading || !data) ? <LoaderCmp/> :
+                    <>
+                        <h5>{data.type_name}</h5>
+                        <span>Узлы:</span>
+                        <ul>
+                            {
+                                data.node_list.map(node =>
+                                    <li
+                                        key={`${node.id}_${data.id}`}
+                                        onClick={() => onSelect(`${node.id}_${data.id}`)}
+                                    >{node.name}</li>
+                                )
+                            }
+                        </ul>
+                    </>
+            }
         </div>
     )
 }
@@ -256,13 +275,13 @@ function parseNodeDataToTreeData(data: ProjectDataDto) {
             return {
                 value: domain.name,
                 label: `Домен "${domain.name}"`,
-                children: domain.type_nodes.map(typeNode => {
+                children: domain.type_nodes_list.map(typeNode => {
                     return {
                         value: typeNode.id,
                         label: typeNode.name,
                         children: typeNode.nodes.map(node => {
                             return {
-                                value: node.id,
+                                value: `${node.id}_${typeNode.id}`,
                                 label: node.name,
                             }
                         })

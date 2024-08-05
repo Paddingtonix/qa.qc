@@ -234,8 +234,10 @@
     background-color: $dark-background-color
     padding: toRem(20) toRem(40)
     width: toRem(350)
-    max-height: toRem(500)
-    overflow-y: auto
+
+    > div
+      max-height: 550px
+      overflow-y: auto
 
   &__info
     display: flex

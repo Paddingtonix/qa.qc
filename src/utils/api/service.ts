@@ -11,15 +11,15 @@ class Service {
     }
 
     async getProjectCategories(projectId: string) {
-        return instance.get<{categories: CategoryDto[]}>(`/project/${projectId}/categories/get/`)
+        return instance.get<{ categories: CategoryDto[] }>(`/project/${projectId}/categories/get/`)
     }
 
     async getProjectFiles(projectId: string) {
-        return instance.get<{files: ProjectFileDto[]}>(`/project/${projectId}/file/get/all/`)
+        return instance.get<{ files: ProjectFileDto[] }>(`/project/${projectId}/file/get/all/`)
     }
 
     async getProjectTests(projectId: string) {
-        return instance.get<{result: {message: string, tests: TestDto[]}}>(`/project/${projectId}/test/get/`)
+        return instance.get<{ result: { message: string, tests: TestDto[] } }>(`/project/${projectId}/test/get/`)
     }
 
     async createProject(data: CreateProjectDto) {
@@ -31,7 +31,7 @@ class Service {
     }
 
     async addProjectMember(projectId: string, userId: string) {
-        return instance.post(`/project/${projectId}/member/add/`, {},{
+        return instance.post(`/project/${projectId}/member/add/`, {}, {
             params: {user_data: userId}
         })
     }
@@ -41,6 +41,7 @@ class Service {
             params: {user_data: userId}
         })
     }
+
     async editProjectName(id: string, data: EditProjectNameDto) {
         return instance.put(`/project/${id}/edit/`, data)
     }
@@ -49,13 +50,21 @@ class Service {
         return instance.get<ProjectDataDto>(`/project/${projectId}/available_data/get/`)
     }
 
-    async getDomains(projectId: string) {
-        return instance.get(`/project/${projectId}/domains/get/`)
+    async getDomainData(projectId: string, domain: string) {
+        return instance.get<DomainDataDto>(`/project/${projectId}/node_types_sharded/get/`, {
+            params: {domain_name: domain}
+        })
     }
 
-    async getNodes(projectId: string, typeNodeId: string) {
-        return instance.get<NodeDto[]>(`/project/${projectId}/nodes/get/`, {
-            params: {type_node_id: typeNodeId}
+    async getTypeNodeData(projectId: string, typeNodeId: string) {
+        return instance.get<TypeNodeDataDto>(`/project/${projectId}/nodes_sharded/get/`, {
+            params: {type_id: typeNodeId}
+        })
+    }
+
+    async getNodeData(projectId: string, typeNodeId: string, nodeId: string) {
+        return instance.get<NodeDataDto>(`/project/${projectId}/node_sharded/get/`, {
+            params: {type_id: typeNodeId, node_id: nodeId}
         })
     }
 
@@ -70,17 +79,17 @@ class Service {
         const formData = new FormData();
         data.files.forEach(file => formData.append("files", file))
 
-        return instance.post<{date: {errorNodes: string}}>(`/project/${data.projectID}/file/upload/`, formData, {
-            params: { category: data.category }
+        return instance.post<{ date: { errorNodes: string } }>(`/project/${data.projectID}/file/upload/`, formData, {
+            params: {category: data.category}
         })
     }
 
-    async getProfile(){
+    async getProfile() {
         return instance.get<UserDto>(`/user/me/`)
     }
 
-    async getUsers(params?: GetUsersParams){
-        return instance.get<UserListDto>(`/user/get/all`, { params })
+    async getUsers(params?: GetUsersParams) {
+        return instance.get<UserListDto>(`/user/get/all`, {params})
     }
 
     async login(data: LoginCredentials) {
@@ -106,8 +115,9 @@ export const queryKeys = {
     project: (projectId?: string) => ["PROJECT", projectId],
     projectFiles: (projectId?: string) => ["PROJECT_FILES", projectId],
     projectData: (projectId?: string) => ["PROJECT_DATA", projectId],
-    projectDomains: (projectId?: string) => ["PROJECT_DOMAINS", projectId],
-    projectNodes: (projectId?: string, nodeId?: string) => ["PROJECT_NODES", projectId, nodeId],
+    nodeData: (projectId?: string, typeNode?: string, nodeId?: string) => ["NODE_DATA", projectId, typeNode, nodeId],
+    domainData: (projectId?: string, domain?: string) => ["DOMAIN_DATA", projectId, domain],
+    typeNodeData: (projectId?: string, typeNode?: string) => ["TYPE_MODE_DATA", projectId, typeNode],
     projectPrimary: (projectId?: string, typeData?: string) => ["PROJECT_PRIMARY", projectId, typeData],
     projectCategories: (projectId?: string) => ["PROJECT_CATEGORIES", projectId],
     projectTests: (projectId?: string) => ["PROJECT_TESTS", projectId],
@@ -194,7 +204,7 @@ export type CategoryDto = {
     extensions_files: string[]
 }
 
-export type NodeDto = {
+export type NodeDataDto = {
     _id: string,
     type_node: string,
     node_data: Array<number | undefined>,
@@ -205,9 +215,26 @@ export type NodeDto = {
     }
 }
 
+export type DomainDataDto = {
+    name: string,
+    type_nodes_list: {
+        id: string,
+        type_name: string
+    }[]
+}
+
+export type TypeNodeDataDto = {
+    id: string,
+    type_name: string,
+    node_list: {
+        id: string,
+        name: string
+    }[]
+}
+
 export type ProjectDataDto = {
     domains: {
-        type_nodes: {
+        type_nodes_list: {
             id: string,
             name: string,
             nodes: {
@@ -218,8 +245,8 @@ export type ProjectDataDto = {
         name: string
     }[],
     primary: {
-      type_data: string[],
-      domain: string
+        type_data: string[],
+        domain: string
     }[]
 }
 

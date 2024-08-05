@@ -27,7 +27,6 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
         mutationFn: (data: UploadTestFileDto) => service.uploadTestFile(data),
         onSuccess: ({data}) => {
             queryClient.invalidateQueries({queryKey: queryKeys.projectFiles(projectId)})
-            queryClient.invalidateQueries({queryKey: queryKeys.projectNodes(projectId)})
             queryClient.invalidateQueries({queryKey: queryKeys.projectTests(projectId)})
             if (data.date.errorNodes)
                 toastWarning(`Файл загружен с ошибками: ${data.date.errorNodes}`);
