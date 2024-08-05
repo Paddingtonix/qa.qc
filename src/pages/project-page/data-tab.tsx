@@ -141,7 +141,7 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
     const columns = [
         columnHelper.accessor("deep", {
             header: () => "Глубина",
-            cell: (props) => props.getValue()
+            cell: (props) => formatTableValue(props.getValue(), decimalPlaces)
         }),
         columnHelper.accessor("type", {
             header: () => data?.name.split("/")[0],
@@ -189,7 +189,7 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 function formatTableValue(value: number | undefined, decimalPlaces: string) {
     if (!value) return "-"
     if (decimalPlaces && Number(decimalPlaces) < 100 && Number(decimalPlaces) >= 0)
-        return value.toFixed(Number(decimalPlaces))
+        return parseFloat(value.toFixed(Number(decimalPlaces)))
     return value
 }
 
