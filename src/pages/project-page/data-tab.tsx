@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback} from "react";
+import React, {ReactNode, useCallback, useState} from "react";
 import {MockDataData, NODES_DATA} from "./MOCK_DATA";
 import TreeCmp, {TreeItem} from "../../components/base/tree-cmp/tree-cmp";
 import {ProjectDataDto, queryKeys, service} from "../../utils/api/service";
@@ -7,6 +7,7 @@ import {useParams, useSearchParams} from "react-router-dom";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 import {createColumnHelper} from "@tanstack/react-table";
 import {TableCmp} from "../../components/base/table-cmp/TableCmp";
+import InputCmp from "../../components/base/input-cmp/input-cmp";
 
 interface Props {
     data?: ProjectDataDto
@@ -126,6 +127,7 @@ interface NodeType {
 const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 
     const [node, typeNode] = selectedNode.split("_")
+    const [decimalPlaces, setDecimalPlaces] = useState<string>("");
 
     const {data, isLoading} = useQuery({
         queryKey: queryKeys.nodeData(projectId, selectedNode),
@@ -142,8 +144,8 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
             cell: (props) => props.getValue()
         }),
         columnHelper.accessor("type", {
-            header: () => "Кп_абс",
-            cell: (props) => props.getValue()
+            header: () => data?.name.split("/")[0],
+            cell: (props) => formatTableValue(props.getValue(), decimalPlaces)
         }),
         columnHelper.accessor("facia", {
             header: () => "Фации",
@@ -166,16 +168,29 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
     return (
         <div className={"node-data-info"}>
             {
-                (isLoading && !data) ? <LoaderCmp/> :
+                (isLoading || !data) ? <LoaderCmp/> :
                     <>
-                        <h5>Кп_откр/Core(well: 17b7)</h5>
+                        <h5>{data.name}</h5>
                         <div className={"node-data-info__table"}>
                             <TableCmp columns={columns} data={getTableData()}/>
                         </div>
+                        <InputCmp
+                            label={"Кол-во знаков после запятой"}
+                            value={decimalPlaces}
+                            onChange={(value) => setDecimalPlaces(value)}
+                            type={"number"}
+                        />
                     </>
             }
         </div>
     )
+}
+
+function formatTableValue(value: number | undefined, decimalPlaces: string) {
+    if (!value) return "-"
+    if (decimalPlaces && Number(decimalPlaces) < 100 && Number(decimalPlaces) >= 0)
+        return value.toFixed(Number(decimalPlaces))
+    return value
 }
 
 const DomainData = ({setContentParams, projectId, selectedNode}: ContentTypeProps) => {

@@ -9,7 +9,7 @@ interface InputProps {
     name?: string,
     isRequired?: boolean,
     pattern?: string,
-    checkRules?: boolean
+    checkRules?: boolean,
 
     onChange(value: string): void
 }

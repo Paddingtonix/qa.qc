@@ -206,6 +206,7 @@ export type CategoryDto = {
 
 export type NodeDataDto = {
     _id: string,
+    name: string,
     type_node: string,
     node_data: Array<number | undefined>,
     values_attributes: {
