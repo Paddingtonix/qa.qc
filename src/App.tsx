@@ -26,7 +26,7 @@ function App() {
 
 
 export const RouterLinks = {
-    Start: "/",
+    Start: "/qa.qc",
     LoadData: "/data",
     Project: "/project/:id",
     Main: "/test",
