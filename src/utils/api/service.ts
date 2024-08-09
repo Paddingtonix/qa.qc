@@ -69,7 +69,7 @@ class Service {
     }
 
     async getPrimary(projectId: string, typeData: string) {
-        return instance.get<any[]>(`/project/${projectId}/primary/get/`, {
+        return instance.get<PrimaryData[]>(`/project/${projectId}/primary/get/`, {
             params: {type_data: typeData}
         })
     }
@@ -231,6 +231,17 @@ export type TypeNodeDataDto = {
         id: string,
         name: string
     }[]
+}
+
+export type PrimaryData = {
+    _id: string,
+    type_data: string,
+    values: Dictionary<string | string[] | {}>,
+    values_attributes: {}
+}
+
+interface Dictionary<T> {
+    [Key: string]: T;
 }
 
 export type ProjectDataDto = {
