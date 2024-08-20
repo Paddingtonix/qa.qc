@@ -65,7 +65,7 @@ const LoadTab = ({files, categories}: LoadTabProps) => {
             <div className={"load-tab__categories-container"}>
                 {
                     categories?.map(category =>
-                        <CategoryFiles {...category} files={files} key={category.name}/>
+                        <CategoryFiles {...category} files={files?.filter(file => file.category === category.name)} key={category.name}/>
                     )
                 }
             </div>

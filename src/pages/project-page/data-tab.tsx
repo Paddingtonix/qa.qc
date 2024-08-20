@@ -49,19 +49,23 @@ const DataTab = ({data}: Props) => {
     const ContentTypeOptions: Record<ContentType, ContentTypeOptionsItem> = {
         [ContentType.Domain]: {
             title: "Домен",
-            content: <DomainData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+            content: <DomainData selectedNode={selectedNode} projectId={projectId || ""}
+                                 setContentParams={setContentParams}/>
         },
         [ContentType.TypeNode]: {
             title: "Тип узла",
-            content: <TypeNodeData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+            content: <TypeNodeData selectedNode={selectedNode} projectId={projectId || ""}
+                                   setContentParams={setContentParams}/>
         },
         [ContentType.Node]: {
             title: "Узел",
-            content: <NodeData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+            content: <NodeData selectedNode={selectedNode} projectId={projectId || ""}
+                               setContentParams={setContentParams}/>
         },
         [ContentType.Primary]: {
             title: "Информация о первичных данных",
-            content: <PrimaryData selectedNode={selectedNode} projectId={projectId || ""} setContentParams={setContentParams}/>
+            content: <PrimaryData selectedNode={selectedNode} projectId={projectId || ""}
+                                  setContentParams={setContentParams}/>
         },
         [ContentType.Null]: {
             content: <h5>Выберите узел</h5>
@@ -116,14 +120,14 @@ const DataTab = ({data}: Props) => {
 interface ContentTypeProps {
     projectId: string,
     selectedNode: string,
+
     setContentParams(contentType: ContentType, nodeId: string): void
 }
 
-interface NodeType {
-    deep?: number,
-    type?: number,
-    facia?: string
-}
+// interface NodeType {
+//     timeScale?: string,
+//     type?: number
+// }
 
 const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
 
@@ -137,30 +141,46 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
         enabled: !!projectId && !!node && !!typeNode
     })
 
-    const columnHelper = createColumnHelper<NodeType>()
+    const columnHelper = createColumnHelper<any>()
 
-    const columns = [
-        columnHelper.accessor("deep", {
-            header: () => "Глубина",
-            cell: (props) => formatTableValue(props.getValue(), decimalPlaces)
-        }),
-        columnHelper.accessor("type", {
-            header: () => data?.name.split("/")[0],
-            cell: (props) => formatTableValue(props.getValue(), decimalPlaces)
-        }),
-        columnHelper.accessor("facia", {
-            header: () => "Фации",
-            cell: (props) => props.getValue()
-        })
-    ]
+    const getColumns = useCallback(() => {
+        const columns = [
+            columnHelper.accessor("node_data", {
+                header: () => data?.name.split("/")[0],
+                cell: (props) => formatTableValue(props.getValue(), decimalPlaces)
+            })
+        ]
+        for (let key in data?.values_attributes) {
+            if (data?.values_attributes.hasOwnProperty(key) && Array.isArray(data?.values_attributes[key])) {
+                columns.push(
+                    columnHelper.accessor(key, {
+                        header: () => key?.toUpperCase(),
+                        cell: (props) =>
+                            Number.isNaN(data?.values_attributes[key][0])
+                                ? formatTableValue(props.getValue(), decimalPlaces)
+                                :  props.getValue()
+                    })
+                )
+            }
+        }
+        return columns;
+    }, [data, decimalPlaces])
 
-    const getTableData = useCallback((): NodeType[] => {
-        const _data: NodeType[] = [];
+    const getTableData = useCallback((): any[] => {
+        const _data: any[] = [];
         data?.node_data.forEach((node, index) => {
             _data.push({
-                deep: data.values_attributes.Глубина[index],
-                type: data.node_data[index],
-                facia: ""
+                node_data: node,
+                ...Object.fromEntries(
+                    Object
+                        .entries(data.values_attributes)
+                        .map(attribute =>
+                            [
+                                attribute[0],
+                                Array.isArray(attribute[1]) ? attribute[1][index] : attribute[1]
+                            ]
+                        )
+                ),
             })
         })
         return _data;
@@ -173,7 +193,7 @@ const NodeData = ({selectedNode, projectId}: ContentTypeProps) => {
                     <>
                         <h5>{data.name}</h5>
                         <div className={"node-data-info__table"}>
-                            <TableCmp columns={columns} data={getTableData()}/>
+                            <TableCmp columns={getColumns()} data={getTableData()}/>
                         </div>
                         <InputCmp
                             label={"Кол-во знаков после запятой"}
@@ -288,16 +308,16 @@ const PrimaryData = ({selectedNode, projectId}: ContentTypeProps) => {
             header: () => "Значения",
             cell: (props) =>
                 <div className={"primary-data-table__values-container"}>
-                    { renderValues(props.getValue()) }
+                    {renderValues(props.getValue())}
                 </div>
         })
     ]
 
     const renderValues = (values: string | string[] | {}) => {
         if (Array.isArray(values))
-            return values.map(value => <BadgeCmp type={"default"}>{value}</BadgeCmp>)
+            return values.map(value => <BadgeCmp key={value} type={"default"}>{value}</BadgeCmp>)
         else {
-            return <BadgeCmp type={"default"}>{typeof(values) === "string" ? values : "-"}</BadgeCmp>
+            return <BadgeCmp type={"default"}>{typeof (values) === "string" ? values : "-"}</BadgeCmp>
         }
     }
 

@@ -7,7 +7,7 @@ class Service {
     }
 
     async getProject(projectId: string) {
-        return instance.get<ProjectDto>(`/project/${projectId}/get`)
+        return instance.get<ProjectDto>(`/project/${projectId}/get/`)
     }
 
     async getProjectCategories(projectId: string) {
@@ -51,19 +51,19 @@ class Service {
     }
 
     async getDomainData(projectId: string, domain: string) {
-        return instance.get<DomainDataDto>(`/project/${projectId}/node_types_sharded/get/`, {
+        return instance.get<DomainDataDto>(`/project/${projectId}/node_types_sharded/get`, {
             params: {domain_name: domain}
         })
     }
 
     async getTypeNodeData(projectId: string, typeNodeId: string) {
-        return instance.get<TypeNodeDataDto>(`/project/${projectId}/nodes_sharded/get/`, {
+        return instance.get<TypeNodeDataDto>(`/project/${projectId}/nodes_sharded/get`, {
             params: {type_id: typeNodeId}
         })
     }
 
     async getNodeData(projectId: string, typeNodeId: string, nodeId: string) {
-        return instance.get<NodeDataDto>(`/project/${projectId}/node_sharded/get/`, {
+        return instance.get<NodeDataDto>(`/project/${projectId}/node_sharded/get`, {
             params: {type_id: typeNodeId, node_id: nodeId}
         })
     }
@@ -209,11 +209,7 @@ export type NodeDataDto = {
     name: string,
     type_node: string,
     node_data: Array<number | undefined>,
-    values_attributes: {
-        WELL: string,
-        Фации: string,
-        Глубина: Array<number | undefined>
-    }
+    values_attributes: Dictionary<string | string[]>
 }
 
 export type DomainDataDto = {
