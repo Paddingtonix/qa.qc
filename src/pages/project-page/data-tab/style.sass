@@ -1,0 +1,42 @@
+@use "../../../assets/style/params.sass" as *
+
+.data-tab
+  width: 100%
+  display: flex
+  gap: toRem(10)
+
+  &__tree
+    width: 30%
+
+    > div
+      max-height: 550px
+      overflow-y: auto
+
+    &__search-input
+      margin: toRem(10) 0
+
+  &__info
+    display: flex
+    flex: 1 1 0
+    flex-direction: column
+    gap: toRem(10)
+
+    h4
+      font-weight: normal
+      color: $text-color
+
+    > div
+      display: flex
+      flex: 1 1 0
+      overflow-x: auto
+
+      p
+        font-size: toRem(18)
+        color: $text-color
+
+    h5
+      text-align: center
+      font-weight: normal
+      font-size: toRem(18)
+      color: $text-color
+      margin: toRem(40) 0

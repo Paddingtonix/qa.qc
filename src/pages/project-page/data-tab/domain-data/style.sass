@@ -1,0 +1,29 @@
+@use "../../../../assets/style/params.sass" as *
+
+.domain-data
+  display: flex
+  flex-direction: column
+  gap: toRem(5)
+
+  h5
+    color: $headers-color
+    text-align: start
+    font-size: toRem(24)
+    margin: 0
+    text-transform: uppercase
+
+  span
+    color: $text-color
+    margin-top: toRem(10)
+
+  ul
+    margin: 0
+    padding: 0
+
+    li
+      margin-top: toRem(5)
+      list-style: none
+      cursor: pointer
+
+      &:hover
+        color: $primary-color

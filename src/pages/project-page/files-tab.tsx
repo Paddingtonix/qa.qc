@@ -4,6 +4,7 @@ import {MockDataFiles, NODES_DATA} from "./MOCK_DATA";
 import {createColumnHelper} from "@tanstack/react-table";
 import {CategoryDto, ProjectFileDto} from "../../utils/api/service";
 import {TableCmp} from "../../components/base/table-cmp/TableCmp";
+import CardCmp from "../../components/base/card-cmp/card-cmp";
 
 interface Props {
     categories?: CategoryDto[],
@@ -16,14 +17,14 @@ const FilesTab = ({categories, files}: Props) => {
 
     return (
         <div className={"files-tab"}>
-            <div className={"files-tab__tree"}>
+            <CardCmp className={"files-tab__tree"}>
                 <TreeCmp
                     items={(files && categories) ? parseProjectFilesToTreeData(files, categories) : []}
                     onSelect={(value, deep) => setSelectedFile(deep === 1 ? value : selectedFile)}
                 />
-            </div>
+            </CardCmp>
             <div>
-                <div className={"files-tab__info"}>
+                <CardCmp className={"files-tab__info"}>
                     {
                         selectedFile ?
                             <>
@@ -34,12 +35,12 @@ const FilesTab = ({categories, files}: Props) => {
                             </>
                             : <h5>Выберете файл</h5>
                     }
-                </div>
+                </CardCmp>
                 {
                     selectedFile &&
-                    <div className={"files-tab__table"}>
+                    <CardCmp className={"files-tab__table"}>
                         <TableCmp columns={columns} data={NODES_DATA}/>
-                    </div>
+                    </CardCmp>
                 }
             </div>
         </div>
@@ -72,17 +73,18 @@ const columns = [
 function parseProjectFilesToTreeData(files: ProjectFileDto[], categories: CategoryDto[]) {
     const treeData: TreeItem[] = [];
     categories.forEach(category => {
-            treeData.push({
-                value: category.name,
-                label: `${category.name?.toUpperCase()}`,
-                children: files.filter(file => file.category === category.name)
-                    .map(file => {
-                        return {
-                            value: file.file_id,
-                            label: file.filename
-                        }
-                    })
-            })
+            if (files.some(file => file.category === category.name))
+                treeData.push({
+                    value: category.name,
+                    label: `${category.name?.toUpperCase()}`,
+                    children: files.filter(file => file.category === category.name)
+                        .map(file => {
+                            return {
+                                value: file.file_id,
+                                label: file.filename
+                            }
+                        })
+                })
         }
     )
     return treeData;

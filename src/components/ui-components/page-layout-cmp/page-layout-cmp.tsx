@@ -36,7 +36,9 @@ const PageLayoutCmp = ({children}: Props) => {
                 </div>
             </div>
             <div className={"layout-content"}>
-                {children}
+                <div>
+                    {children}
+                </div>
             </div>
         </div>
     )

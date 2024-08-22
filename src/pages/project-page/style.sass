@@ -10,14 +10,14 @@
   gap: toRem(15)
 
   &__header
-    display: flex
-    flex-direction: column
-    justify-content: space-between
-    width: toRem(1090)
-    gap: toRem(20)
-    background-color: $dark-background-color
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4)
-    padding: toRem(25) toRem(25) 0 toRem(25)
+    width: 100%
+
+    > div
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      gap: toRem(20)
+      padding-bottom: 0 !important
 
     &__edit-project-name
       h6
@@ -34,7 +34,7 @@
         border-bottom: 1px $text-color solid
 
   &__content
-    width: toRem(1140)
+    width: 100%
 
 .load-tab
   display: flex
@@ -42,8 +42,6 @@
   position: relative
 
   &__categories-container
-    background-color: $dark-background-color
-    padding: toRem(20)
     display: flex
     flex-direction: column
     gap: toRem(10)
@@ -59,11 +57,16 @@
     .category-files
 
       &_open > span
-        color: $primary-color
-
         .category-files__dropdown
           > .arrow
-            transform: rotateX(180deg)
+            transform: rotate(-90deg)
+
+      &_empty > span
+        color: $text-color
+        cursor: auto
+
+        &:hover
+          color: $text-color
 
       &__list
         display: none
@@ -83,11 +86,14 @@
         font-size: toRem(20)
         cursor: pointer
         display: flex
-        justify-content: space-between
+        gap: toRem(5)
         align-items: center
         width: 100%
         padding: toRem(5)
         transition: .3s
+
+        &:hover
+          color: $primary-color
 
         .category-files__dropdown
           display: flex
@@ -106,14 +112,12 @@
   &__upload-container
     position: sticky
     top: toRem(100)
-    width: toRem(350)
+    max-width: toRem(400)
+    width: 100%
     display: flex
     flex-direction: column
     gap: toRem(10)
     height: max-content
-
-    background-color: $dark-background-color
-    padding: toRem(20)
 
     .files-container
       display: flex
@@ -193,8 +197,6 @@
   gap: toRem(10)
 
   &__tree
-    background-color: $dark-background-color
-    padding: toRem(20) toRem(40)
     width: toRem(350)
 
   > div:nth-child(2)
@@ -207,8 +209,6 @@
       display: flex
       flex-direction: column
       gap: toRem(10)
-      background-color: $dark-background-color
-      padding: toRem(20)
 
       h4
         font-weight: normal
@@ -226,47 +226,6 @@
         color: $text-color
         margin: toRem(40) 0
 
-.data-tab
-  display: flex
-  gap: toRem(10)
-
-  &__tree
-    background-color: $dark-background-color
-    padding: toRem(20) toRem(40)
-    width: toRem(350)
-
-    > div
-      max-height: 550px
-      overflow-y: auto
-
-  &__info
-    display: flex
-    flex: 1 1 0
-    flex-direction: column
-    gap: toRem(10)
-    background-color: $dark-background-color
-    padding: toRem(20)
-
-    h4
-      font-weight: normal
-      color: $text-color
-
-    > div
-      display: flex
-      flex: 1 1 0
-      max-width: 600px
-      overflow-x: auto
-
-      p
-        font-size: toRem(18)
-        color: $text-color
-
-    h5
-      text-align: center
-      font-weight: normal
-      font-size: toRem(18)
-      color: $text-color
-      margin: toRem(40) 0
 
 .edit-project-name-cmp
   h6
@@ -281,62 +240,3 @@
     color: $headers-color
     text-transform: uppercase
     border-bottom: 1px $text-color solid
-
-.node-data-info
-  display: flex
-  flex-direction: column
-  gap: toRem(10)
-
-  h5
-    color: $headers-color
-    text-align: start
-    font-size: toRem(24)
-    margin: 0
-    text-transform: uppercase
-
-  &__table
-    max-height: 500px
-    overflow-y: auto
-
-.domain-data
-  display: flex
-  flex-direction: column
-  gap: toRem(5)
-
-  h5
-    color: $headers-color
-    text-align: start
-    font-size: toRem(24)
-    margin: 0
-    text-transform: uppercase
-
-  span
-    color: $text-color
-    margin-top: toRem(10)
-
-  ul
-    margin: 0
-    padding: 0
-
-    li
-      margin-top: toRem(5)
-      list-style: none
-      cursor: pointer
-
-      &:hover
-        color: $primary-color
-
-.primary-data-table
-  width: 100%
-  max-height: 500px
-  overflow-y: auto
-
-  &__values-container
-    display: flex
-    flex-wrap: wrap
-    gap: toRem(5)
-    justify-content: center
-    align-items: center
-
-    > span
-      margin: 0

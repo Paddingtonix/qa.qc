@@ -241,21 +241,27 @@ interface Dictionary<T> {
 }
 
 export type ProjectDataDto = {
-    domains: {
-        type_nodes_list: {
-            id: string,
-            name: string,
-            nodes: {
-                id: string,
-                name: string
-            }[]
-        }[],
-        name: string
-    }[],
+    domains: ProjectDataDomainDto[],
     primary: {
         type_data: string[],
         domain: string
     }[]
+}
+
+export type ProjectDataDomainDto = {
+    type_nodes_list: ProjectDataTypeNodeDto[],
+    name: string
+}
+
+export type ProjectDataTypeNodeDto = {
+    id: string,
+    name: string,
+    nodes: ProjectDataNodeDto[]
+}
+
+export type ProjectDataNodeDto = {
+    id: string,
+    name: string
 }
 
 export type TestDto = {
