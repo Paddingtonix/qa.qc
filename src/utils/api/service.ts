@@ -7,7 +7,7 @@ class Service {
     }
 
     async getProject(projectId: string) {
-        return instance.get<ProjectDto>(`/project/${projectId}/get`)
+        return instance.get<ProjectDto>(`/project/${projectId}/get/`)
     }
 
     async getProjectCategories(projectId: string) {
@@ -51,25 +51,25 @@ class Service {
     }
 
     async getDomainData(projectId: string, domain: string) {
-        return instance.get<DomainDataDto>(`/project/${projectId}/node_types_sharded/get/`, {
+        return instance.get<DomainDataDto>(`/project/${projectId}/node_types_sharded/get`, {
             params: {domain_name: domain}
         })
     }
 
     async getTypeNodeData(projectId: string, typeNodeId: string) {
-        return instance.get<TypeNodeDataDto>(`/project/${projectId}/nodes_sharded/get/`, {
+        return instance.get<TypeNodeDataDto>(`/project/${projectId}/nodes_sharded/get`, {
             params: {type_id: typeNodeId}
         })
     }
 
     async getNodeData(projectId: string, typeNodeId: string, nodeId: string) {
-        return instance.get<NodeDataDto>(`/project/${projectId}/node_sharded/get/`, {
+        return instance.get<NodeDataDto>(`/project/${projectId}/node_sharded/get`, {
             params: {type_id: typeNodeId, node_id: nodeId}
         })
     }
 
     async getPrimary(projectId: string, typeData: string) {
-        return instance.get<any[]>(`/project/${projectId}/primary/get/`, {
+        return instance.get<PrimaryData[]>(`/project/${projectId}/primary/get/`, {
             params: {type_data: typeData}
         })
     }
@@ -209,11 +209,7 @@ export type NodeDataDto = {
     name: string,
     type_node: string,
     node_data: Array<number | undefined>,
-    values_attributes: {
-        WELL: string,
-        Фации: string,
-        Глубина: Array<number | undefined>
-    }
+    values_attributes: Dictionary<string | string[]>
 }
 
 export type DomainDataDto = {
@@ -233,22 +229,41 @@ export type TypeNodeDataDto = {
     }[]
 }
 
+export type PrimaryData = {
+    _id: string,
+    type_data: string,
+    values: Dictionary<string | string[] | {}>,
+    values_attributes: {}
+}
+
+interface Dictionary<T> {
+    [Key: string]: T;
+}
+
 export type ProjectDataDto = {
-    domains: {
-        type_nodes_list: {
-            id: string,
-            name: string,
-            nodes: {
-                id: string,
-                name: string
-            }[]
-        }[],
-        name: string
-    }[],
-    primary: {
-        type_data: string[],
-        domain: string
-    }[]
+    domains: ProjectDataDomainDto[],
+    primary: ProjectPrimaryDataDomainDto[]
+}
+
+export type ProjectPrimaryDataDomainDto = {
+    domain: string,
+    type_data: string[]
+}
+
+export type ProjectDataDomainDto = {
+    type_nodes_list: ProjectDataTypeNodeDto[],
+    name: string
+}
+
+export type ProjectDataTypeNodeDto = {
+    id: string,
+    name: string,
+    nodes: ProjectDataNodeDto[]
+}
+
+export type ProjectDataNodeDto = {
+    id: string,
+    name: string
 }
 
 export type TestDto = {

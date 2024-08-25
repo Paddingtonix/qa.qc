@@ -1,0 +1,18 @@
+@use "../../../../assets/style/params.sass" as *
+
+.node-data-info
+  display: flex
+  flex-direction: column
+  gap: toRem(10)
+  width: 100%
+
+  h5
+    color: $headers-color
+    text-align: start
+    font-size: toRem(24)
+    margin: 0
+    text-transform: uppercase
+
+  &__table
+    max-height: 500px
+    overflow-y: auto

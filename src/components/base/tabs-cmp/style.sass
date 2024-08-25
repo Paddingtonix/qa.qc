@@ -4,16 +4,30 @@
   display: flex
   flex-wrap: wrap
   gap: toRem(5)
-  padding: toRem(10) 0 0 0
-  border-bottom: 1px solid #3a3a3a
+  padding: 0
+  border: 0 solid #3a3a3a
 
-  .tabs__item
-    border-bottom: 1px solid transparent
+  &_bottom
+    border-bottom-width: 1px
+
+    .tabs-cmp__item
+      border-bottom-width: 1px
+
+  &_top
+    border-top-width: 1px
+
+    .tabs-cmp__item
+      border-top-width: 1px
+
+  &__item
+    border: 0 solid transparent
     padding: toRem(15) toRem(20)
     background-color: transparent
     cursor: pointer
     color: $headers-color
     transition: .3s
+    flex: 1 1 0
+    text-align: center
 
     &:hover
       border-color: $primary-color

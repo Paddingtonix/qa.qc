@@ -5,7 +5,7 @@ import {EditProjectNameDto, queryKeys, service} from "../../utils/api/service";
 import {useParams, useSearchParams} from "react-router-dom";
 import LoadProjectTab from "./load-tab";
 import FilesTab from "./files-tab";
-import DataTab from "./data-tab";
+import DataTab from "./data-tab/data-tab";
 import PageLayoutCmp from "../../components/ui-components/page-layout-cmp/page-layout-cmp";
 import LoaderCmp from "../../components/base/loader-cmp/loader-cmp";
 import TabsCmp, {TabItem} from "../../components/base/tabs-cmp/tabs-cmp";
@@ -13,6 +13,7 @@ import ProjectMembersCmp from "../../components/ui-components/project-members/Pr
 import {useNotification} from "../../components/base/notification/notification-provider";
 import {AxiosError} from "axios";
 import TooltipCmp from "../../components/base/tooltip-cmp/tooltip-cmp";
+import CardCmp from "../../components/base/card-cmp/card-cmp";
 
 enum ProjectTab {
     Load = "load",
@@ -73,18 +74,20 @@ export const ProjectPage = () => {
                 {
                     (loadingProject || !project) ? <LoaderCmp/> :
                         <div className={"project-page__header"}>
-                            <EditProjectName name={project.project_name} projectId={project.project_id}/>
-                            <ProjectMembersCmp
-                                members={project.project_members}
-                                projectId={project.project_id}
-                                owner={project.project_owner}
-                                enableEdit={true}
-                            />
-                            <TabsCmp
-                                items={ProjectTabItems}
-                                selectedTab={currentTab}
-                                onSelect={(key) => setParams({t: key})}
-                            />
+                            <CardCmp>
+                                <EditProjectName name={project.project_name} projectId={project.project_id}/>
+                                <ProjectMembersCmp
+                                    members={project.project_members}
+                                    projectId={project.project_id}
+                                    owner={project.project_owner}
+                                    enableEdit={true}
+                                />
+                                <TabsCmp
+                                    items={ProjectTabItems}
+                                    selectedTab={currentTab}
+                                    onSelect={(key) => setParams({t: key})}
+                                />
+                            </CardCmp>
                         </div>
                 }
                 <div className={"project-page__content"}>
