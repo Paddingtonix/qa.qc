@@ -118,7 +118,7 @@ const DataTab = ({data}: Props) => {
     }, [setContentParams, currentDataType])
 
     const onSelectPrimary = useCallback((value: string, deep: number) => {
-        setContentParams(PrimaryContentTypeDeep[deep], value)
+        if (deep) setContentParams(PrimaryContentTypeDeep[deep], value)
     }, [setContentParams, currentDataType])
 
     return (

@@ -43,30 +43,28 @@ const ProjectsPage = () => {
     return (
         <PageLayoutCmp>
             <div className={"projects-page"}>
-                <div>
-                    <div className={"projects-page__header"}>
-                        <div>
-                            <h2>Проекты</h2>
-                            { currentTab === ProjectAffiliation.Owned ? <CreateProjectButton/> : undefined }
-                        </div>
-                        <TabsCmp
-                            items={ProjectAffiliationTabItems}
-                            selectedTab={currentTab}
-                            onSelect={(key) => setParams({t: key})}
-                        />
+                <div className={"projects-page__header"}>
+                    <div>
+                        <h2>Проекты</h2>
+                        { currentTab === ProjectAffiliation.Owned ? <CreateProjectButton/> : undefined }
                     </div>
-                    <div className={"projects-page__projects-list"}>
-                        {isLoading ? <LoaderCmp/> :
-                            getProjects().length ? getProjects().map(project =>
-                                <ProjectItem
-                                    id={project.project_id}
-                                    name={project.project_name}
-                                    members={project.project_members}
-                                    owner={project.project_owner}
-                                    key={project.project_id}
-                                />
-                            ) : <span className={"projects-page__empty-list-text"}>Список проектов пуст</span>}
-                    </div>
+                    <TabsCmp
+                        items={ProjectAffiliationTabItems}
+                        selectedTab={currentTab}
+                        onSelect={(key) => setParams({t: key})}
+                    />
+                </div>
+                <div className={"projects-page__projects-list"}>
+                    {isLoading ? <LoaderCmp/> :
+                        getProjects().length ? getProjects().map(project =>
+                            <ProjectItem
+                                id={project.project_id}
+                                name={project.project_name}
+                                members={project.project_members}
+                                owner={project.project_owner}
+                                key={project.project_id}
+                            />
+                        ) : <span className={"projects-page__empty-list-text"}>Список проектов пуст</span>}
                 </div>
             </div>
         </PageLayoutCmp>
