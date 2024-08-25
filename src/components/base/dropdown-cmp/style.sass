@@ -5,8 +5,7 @@
   position: relative
 
   &__input
-    background-color: $background-color
-    border-radius: toRem(8)
+    background-color: rgba(0, 0, 0, 0.1)
     display: flex
     gap: toRem(5)
     position: relative
@@ -14,6 +13,8 @@
     align-items: center
     cursor: pointer
     padding: toRem(15) toRem(20)
+    border-bottom: 1px solid #3a3a3a
+    transition: .3s
 
     > span
       flex: 1 1 0
@@ -24,6 +25,7 @@
       white-space: nowrap
 
     &:hover
+      border-color: $primary-color
       .arrow
         fill: $headers-color
 
@@ -46,7 +48,6 @@
       display: flex
       flex-direction: column
       position: absolute
-      border-radius: toRem(12)
       width: 100%
       background-color: $dark-background-color
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3)

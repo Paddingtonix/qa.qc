@@ -6,14 +6,59 @@
   gap: toRem(10)
 
   &__tree
+    padding-top: 0 !important
     width: 30%
 
-    > div
+    &_hidden
+      display: none
+
+    > div:last-child
       max-height: 550px
       overflow-y: auto
 
-    &__search-input
+    .data-search-input
+      display: flex
+      justify-content: space-between
+      align-items: center
+      gap: toRem(10)
       margin: toRem(10) 0
+
+      &__settings
+        position: relative
+        display: flex
+
+        > svg
+          width: toRem(40)
+          height: toRem(40)
+          cursor: pointer
+
+          &:hover
+            path, circle
+              stroke: $primary-color
+
+          path, circle
+            stroke: $text-color
+            transition: 0.3s
+
+        > div
+          width: max-content
+          position: absolute
+          display: flex
+          flex-direction: column
+          gap: toRem(10)
+          right: 0
+          left: 0
+          top: toRem(40)
+          z-index: 100
+
+          background-color: $dark-background-color
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3)
+          border-radius: toRem(8)
+          padding: toRem(16) toRem(16)
+
+          > span
+            display: flex
+            gap: toRem(5)
 
   &__info
     display: flex

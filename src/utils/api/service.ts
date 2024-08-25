@@ -242,10 +242,12 @@ interface Dictionary<T> {
 
 export type ProjectDataDto = {
     domains: ProjectDataDomainDto[],
-    primary: {
-        type_data: string[],
-        domain: string
-    }[]
+    primary: ProjectPrimaryDataDomainDto[]
+}
+
+export type ProjectPrimaryDataDomainDto = {
+    domain: string,
+    type_data: string[]
 }
 
 export type ProjectDataDomainDto = {

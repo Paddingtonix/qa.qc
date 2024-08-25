@@ -1,20 +1,26 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import "./style.sass"
 
 interface Props{
     name?: string,
+    selected?: boolean
     onClick?(): void
 }
 
 export const CheckboxCmp = (props: Props) => {
 
-    const {name, onClick} = props;
+    const {name, selected, onClick} = props;
 
-    const [active, setActive] = useState(false)
+    const [active, setActive] = useState(selected || false)
     function onSelect() {
         if (onClick) onClick();
         setActive(!active);
     }
+
+    useEffect(() => {
+        if (selected !== undefined)
+            setActive(selected)
+    }, [selected])
 
     return (
         <div className='checkbox' onClick={onSelect}>

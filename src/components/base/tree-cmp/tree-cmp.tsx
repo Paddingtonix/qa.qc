@@ -4,6 +4,7 @@ import "./style.sass"
 interface TreeProps {
     items?: TreeItem[],
     selectedValue?: string,
+    className?: string,
     onSelect?(value: string, deep: number): void
 }
 
@@ -18,6 +19,7 @@ const TreeCmp = (props: TreeProps) => {
     const {
         items,
         selectedValue: initialSelectedValue,
+        className,
         onSelect
     } = props;
     const [selectedValue, setSelectedValue] = useState<undefined | string>(initialSelectedValue || undefined);
@@ -28,8 +30,8 @@ const TreeCmp = (props: TreeProps) => {
 
     const selectValue = useCallback((value: string, deep: number) => {
         onSelect
-            ? onSelect(value !== selectedValue ? value : "", deep)
-            : setSelectedValue(value !== selectedValue ? value : "");
+            ? onSelect(value, deep)
+            : setSelectedValue(value);
     }, [selectedValue])
 
     const isSelectedValue = useCallback((value: string) => {
@@ -38,17 +40,17 @@ const TreeCmp = (props: TreeProps) => {
 
 
     return (
-        <div className={"tree-cmp"}>
+        <div className={`tree-cmp ${className}`}>
             <ul>
                 {
-                    items?.map(item =>
+                    items?.length ? items?.map(item =>
                         <TreeItem
                             key={item.value}
                             {...item}
                             selectValue={selectValue}
                             isSelectedValue={isSelectedValue}
                             depth={0}
-                        />)
+                        />) : <span>Нет данных</span>
                 }
             </ul>
         </div>
